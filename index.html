@@ -691,6 +691,28 @@
             #page-you > section:last-child > div > div {
                 grid-template-columns: 1fr !important;
             }
+
+            /* Fix for ADAPT page book layouts on mobile */
+            #page-adapt > section:nth-child(2) > div > div {
+                grid-template-columns: 1fr !important;
+                gap: 2rem !important;
+            }
+
+            #page-adapt > section:nth-child(2) > div > div > div {
+                text-align: center;
+            }
+
+            #page-adapt > section:nth-child(2) > div > div > div > div {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 2rem !important;
+            }
+
+            #page-adapt img {
+                max-width: 200px !important;
+                margin: 0 auto !important;
+            }
+
         }
 
         @media (max-width: 480px) {
