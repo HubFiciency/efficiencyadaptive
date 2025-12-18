@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Efficiency Adaptive — Book</title>
+
+  <!-- Google Font: Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #0a0a0a;
+      --muted: #6b6b6b;
+      --card: rgba(245, 245, 247, 0.9);
+      --border: rgba(60, 60, 67, 0.15);
+      --hairline: rgba(60, 60, 67, 0.08);
+      --shadow: 0 18px 60px rgba(0,0,0,0.08);
+      --shadow-soft: 0 10px 30px rgba(0,0,0,0.06);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --gradient: linear-gradient(135deg, #4f7cff, #7a5cff);
+      --bg-wash: radial-gradient(1200px 800px at 20% -10%, rgba(79,124,255,0.12), transparent 55%),
+                 radial-gradient(1200px 800px at 80% 0%, rgba(122,92,255,0.10), transparent 55%),
+                 radial-gradient(900px 600px at 50% 110%, rgba(0,0,0,0.03), transparent 60%);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0b0b0f;
+      --text: #f5f5f7;
+      --muted: #a1a1a6;
+      --card: rgba(28, 28, 30, 0.78);
+      --border: rgba(235, 235, 245, 0.16);
+      --hairline: rgba(235, 235, 245, 0.10);
+      --shadow: 0 22px 70px rgba(0,0,0,0.55);
+      --shadow-soft: 0 12px 40px rgba(0,0,0,0.45);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --gradient: linear-gradient(135deg, #6aa0ff, #9a7bff);
+      --bg-wash: radial-gradient(1200px 800px at 20% -10%, rgba(106,160,255,0.18), transparent 55%),
+                 radial-gradient(1200px 800px at 80% 0%, rgba(154,123,255,0.14), transparent 55%),
+                 radial-gradient(900px 600px at 50% 110%, rgba(255,255,255,0.04), transparent 60%);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      letter-spacing: -0.01em;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: var(--bg-wash);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 28px 24px 90px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      margin-bottom: 48px;
+      backdrop-filter: saturate(180%) blur(18px);
+      -webkit-backdrop-filter: saturate(180%) blur(18px);
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+      font-size: 14px;
+      letter-spacing: 0.2px;
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .brand strong {
+      color: var(--text);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      text-decoration: none;
+    }
+
+    .brand a { text-decoration: none; color: inherit; }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--gradient);
+      box-shadow: 0 8px 20px rgba(79,124,255,0.22);
+    }
+
+    .controls {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .segmented {
+      display: inline-flex;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 3px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .segmented button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 160ms ease, color 160ms ease;
+    }
+
+    .segmented button[aria-pressed="true"] {
+      background: var(--card);
+      color: var(--text);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.02);
+      user-select: none;
+    }
+
+    .toggle span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .switch {
+      width: 40px;
+      height: 22px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      position: relative;
+      background: rgba(120,120,128,0.12);
+      cursor: pointer;
+      transition: background 180ms ease;
+    }
+
+    .switch::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: #fff;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+      transform: translateX(0);
+      transition: transform 180ms ease;
+    }
+
+    [data-theme="dark"] .switch::after { background: #f5f5f7; }
+
+    .switch[aria-checked="true"] {
+      background: linear-gradient(135deg, rgba(79,124,255,0.55), rgba(122,92,255,0.55));
+    }
+
+    .switch[aria-checked="true"]::after { transform: translateX(18px); }
+
+    /* Page */
+    .page-title {
+      max-width: 860px;
+      margin: 44px 0 18px;
+    }
+
+    .page-title h1 {
+      font-size: clamp(34px, 4.6vw, 54px);
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .page-title p {
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 680px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 22px;
+      align-items: start;
+      margin-top: 26px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .cover {
+      position: sticky;
+      top: 92px;
+      padding: 18px;
+    }
+
+    .cover img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 14px;
+      border: 1px solid var(--hairline);
+      box-shadow: var(--shadow);
+      background: rgba(255,255,255,0.6);
+    }
+
+    .meta h2 {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .meta p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0 16px;
+    }
+
+    .chip {
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+      padding: 7px 10px;
+      border-radius: 999px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+      font-family: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--text);
+      text-decoration: none;
+      transition: transform 160ms ease, background 160ms ease;
+    }
+
+    .btn:hover { background: var(--card); transform: translateY(-1px); }
+
+    .btn.primary {
+      border: 0;
+      background: var(--gradient);
+      color: #fff;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .btn.primary:hover { transform: translateY(-1px); }
+
+    .divider {
+      height: 1px;
+      background: var(--hairline);
+      border: 0;
+      margin: 18px 0;
+    }
+
+    footer {
+      border-top: 1px solid var(--hairline);
+      padding: 38px 24px 80px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 70px;
+    }
+
+    footer nav { margin-bottom: 14px; }
+
+    footer a {
+      color: var(--muted);
+      text-decoration: none;
+      margin: 0 10px;
+      padding-bottom: 2px;
+      border-bottom: 1px solid transparent;
+    }
+
+    footer a:hover {
+      color: var(--text);
+      border-bottom-color: var(--hairline);
+    }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 320px 1fr; }
+    }
+
+    @media (max-width: 860px) {
+      .layout { grid-template-columns: 1fr; }
+      .cover { position: relative; top: auto; }
+      header { margin-bottom: 38px; }
+      .page-title { margin: 34px 0 14px; }
+    }
+
+    @media (max-width: 420px) {
+      .controls { gap: 10px; }
+      .toggle span { display: none; }
+    }
+  </style>
+</head>
+
+<body data-theme="light">
+  <div class="container">
+    <header>
+      <div class="brand">
+        <a href="./index.html" aria-label="Back to home"><strong>Efficiency Adaptive</strong></a>
+      </div>
+
+      <div class="controls">
+        <div class="segmented" role="group" aria-label="Language">
+          <button id="langEn" type="button" aria-pressed="true" onclick="setLang('en')">EN</button>
+          <button id="langFr" type="button" aria-pressed="false" onclick="setLang('fr')">FR</button>
+        </div>
+
+        <div class="toggle" aria-label="Theme">
+          <span id="themeLabel">Light</span>
+          <div id="themeSwitch" class="switch" role="switch" tabindex="0" aria-checked="false" onclick="toggleTheme()"></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="page-title">
+      <h1 id="pageTitle">Book</h1>
+      <p id="pageDesc">A practical, minimal guide to modern efficiency and AI — designed to reduce noise and increase clarity.</p>
+    </div>
+
+    <div class="layout">
+      <aside class="card cover" aria-label="Book cover">
+        <img id="bookCover" src="./book-cover.png" alt="Modern Efficiency & Artificial Intelligence — book cover" loading="eager" />
+      </aside>
+
+      <main class="card meta" aria-label="Book details">
+        <h2 id="bookTitle">Modern Efficiency & Artificial Intelligence</h2>
+        <p id="bookSubtitle">Less effort. More results.</p>
+
+        <div class="chips" aria-label="Highlights">
+          <div class="chip" id="chip1">Modern work</div>
+          <div class="chip" id="chip2">Clarity</div>
+          <div class="chip" id="chip3">AI mindset</div>
+          <div class="chip" id="chip4">Sustainable performance</div>
+        </div>
+
+        <p id="bookBody">
+          This book explores a simple idea: the best systems are the ones you can actually keep. It connects modern efficiency with practical AI thinking — without hype, without overload.
+        </p>
+
+        <hr class="divider" />
+
+        <p id="bookNote">
+          Available in English and French. Use the language switch to preview the corresponding cover.
+        </p>
+
+        <div class="actions">
+          <a class="btn primary" id="buyBtn" href="https://www.amazon.ca/dp/2982406837" target="_blank" rel="noopener">Buy / Read</a>
+          <a class="btn" id="homeBtn" href="./index.html">Back to Home</a>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <footer>
+    <nav>
+      <a href="./index.html">Home</a>
+      <a href="mailto:contact@efficiency-adaptive.com">Contact</a>
+    </nav>
+    <div>Efficiency Adaptive™, ADAPT System™, ADAPT Core™, ADAPT Circle™ are trademarks used by Philippe Notot.</div>
+    <div style="margin-top:.5em">© 2025 Philippe Notot. All rights reserved.</div>
+  </footer>
+
+  <script>
+    const copy = {
+      en: {
+        pageTitle: "Book",
+        pageDesc: "A practical, minimal guide to modern efficiency and AI — designed to reduce noise and increase clarity.",
+        bookTitle: "Modern Efficiency & Artificial Intelligence",
+        bookSubtitle: "Less effort. More results.",
+        chip1: "Modern work",
+        chip2: "Clarity",
+        chip3: "AI mindset",
+        chip4: "Sustainable performance",
+        bookBody: "This book explores a simple idea: the best systems are the ones you can actually keep. It connects modern efficiency with practical AI thinking — without hype, without overload.",
+        bookNote: "Available in English and French. Use the language switch to preview the corresponding cover.",
+        buyBtn: "Buy / Read",
+        buyRef: "https://www.amazon.ca/dp/2982406837",
+        homeBtn: "Back to Home",
+        themeLight: "Light",
+        themeDark: "Dark",
+        coverSrc: "./book-cover.png",
+        coverAlt: "Modern Efficiency & Artificial Intelligence — book cover"
+      },
+      fr: {
+        pageTitle: "Livre",
+        pageDesc: "Un guide pratique et minimal pour l’efficacité moderne et l’IA — conçu pour réduire le bruit et augmenter la clarté.",
+        bookTitle: "Efficacité Moderne et Intelligence Artificielle",
+        bookSubtitle: "Moins d’effort, plus de résultats.",
+        chip1: "Travail moderne",
+        chip2: "Clarté",
+        chip3: "Esprit IA",
+        chip4: "Performance durable",
+        bookBody: "Ce livre explore une idée simple : les meilleurs systèmes sont ceux qu’on peut réellement maintenir. Il relie l’efficacité moderne à une pensée IA pratique — sans hype, sans surcharge.",
+        bookNote: "Disponible en anglais et en français. Utilise le switch de langue pour voir la couverture correspondante.",
+        buyBtn: "Acheter / Lire",
+        buyRef: "https://www.amazon.ca/dp/2982406810",
+        homeBtn: "Retour accueil",
+        themeLight: "Clair",
+        themeDark: "Sombre",
+        coverSrc: "./livre-couverture.png",
+        coverAlt: "Efficacité Moderne et Intelligence Artificielle — couverture du livre"
+      }
+    };
+
+    let lang = "en";
+
+    function applyLang(next) {
+      const c = copy[next];
+      document.getElementById("pageTitle").textContent = c.pageTitle;
+      document.getElementById("pageDesc").textContent = c.pageDesc;
+      document.getElementById("bookTitle").textContent = c.bookTitle;
+      document.getElementById("bookSubtitle").textContent = c.bookSubtitle;
+
+      document.getElementById("chip1").textContent = c.chip1;
+      document.getElementById("chip2").textContent = c.chip2;
+      document.getElementById("chip3").textContent = c.chip3;
+      document.getElementById("chip4").textContent = c.chip4;
+
+      document.getElementById("bookBody").textContent = c.bookBody;
+      document.getElementById("bookNote").textContent = c.bookNote;
+      document.getElementById("buyBtn").textContent = c.buyBtn;
+      document.getElementById("homeBtn").textContent = c.homeBtn;
+
+      const img = document.getElementById("bookCover");
+      img.src = c.coverSrc;
+      img.alt = c.coverAlt;
+
+      document.getElementById("langEn").setAttribute("aria-pressed", String(next === "en"));
+      document.getElementById("langFr").setAttribute("aria-pressed", String(next === "fr"));
+
+      const isDark = document.body.dataset.theme === "dark";
+      document.getElementById("themeLabel").textContent = isDark ? c.themeDark : c.themeLight;
+
+      lang = next;
+    }
+
+    function setLang(next) { applyLang(next); }
+
+    function toggleTheme() {
+      const body = document.body;
+      const nextTheme = body.dataset.theme === "light" ? "dark" : "light";
+      body.dataset.theme = nextTheme;
+
+      const checked = nextTheme === "dark";
+      const sw = document.getElementById("themeSwitch");
+      sw.setAttribute("aria-checked", String(checked));
+
+      const c = copy[lang];
+      document.getElementById("themeLabel").textContent = checked ? c.themeDark : c.themeLight;
+    }
+
+    // Keyboard toggle on the theme switch
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      const active = document.activeElement;
+      if (active && active.id === "themeSwitch") {
+        e.preventDefault();
+        toggleTheme();
+      }
+    });
+
+    (function init() {
+      document.body.dataset.theme = "light";
+      document.getElementById("themeSwitch").setAttribute("aria-checked", "false");
+      applyLang("en");
+    })();
+  </script>
+</body>
+</html>

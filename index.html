@@ -1,1546 +1,495 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library of Modern Adaptive Efficiency — ADAPT Series</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="icon" type="image/png" href="logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #06b6d4;
-            --accent: #8b5cf6;
-            --success: #10b981;
-            --dark: #1e293b;
-            --light-bg: #f8fafc;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --card-bg: #ffffff;
-            --header-bg: rgba(248, 250, 252, 0.95);
-            --hero-gradient-start: #f8fafc;
-            --hero-gradient-mid: #e0e7ff;
-            --hero-gradient-end: #dbeafe;
-            --shadow: rgba(0,0,0,0.06);
-            --shadow-hover: rgba(99, 102, 241, 0.15);
-        }
-
-        body.dark-mode {
-            --light-bg: #0f172a;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --card-bg: #1e293b;
-            --header-bg: rgba(15, 23, 42, 0.95);
-            --hero-gradient-start: #0f172a;
-            --hero-gradient-mid: #1e293b;
-            --hero-gradient-end: #334155;
-            --shadow: rgba(0,0,0,0.3);
-            --shadow-hover: rgba(99, 102, 241, 0.3);
-            --dark: #0f172a;
-        }
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            line-height: 1.6;
-            color: var(--text-primary);
-            background-color: var(--light-bg);
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        /* Header & Navigation */
-        header {
-            background-color: var(--header-bg);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem 2rem;
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.08);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 2px solid rgba(99, 102, 241, 0.1);
-            transition: background-color 0.3s ease;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-
-        .logo:hover {
-            transform: translateY(-2px);
-        }
-
-        .logo .adaptive {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 400;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-primary);
-            font-weight: 500;
-            font-size: 0.9rem;
-            position: relative;
-            transition: color 0.3s;
-            letter-spacing: 0.5px;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -5px;
-            left: 0;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transition: width 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .nav-links a.active {
-            color: var(--primary);
-        }
-
-        .nav-links a.active::after {
-            width: 100%;
-        }
-
-        .nav-actions {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-        }
-
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        .toggle {
-            width: 40px;
-            height: 22px;
-            background-color: #cbd5e0;
-            border-radius: 11px;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .toggle:hover {
-            background-color: #a0aec0;
-        }
-
-        .toggle::after {
-            content: '';
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            background-color: white;
-            border-radius: 50%;
-            top: 3px;
-            left: 3px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .toggle.active {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-        }
-
-        .toggle.active::after {
-            left: 21px;
-        }
-
-        .toggle-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        /* Mobile Menu Button */
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            padding: 8px;
-        }
-
-        .menu-toggle span {
-            width: 25px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-radius: 2px;
-            transition: all 0.3s;
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: calc(100vh - 100px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--hero-gradient-start) 0%, var(--hero-gradient-mid) 50%, var(--hero-gradient-end) 100%);
-            padding: 4rem 2rem;
-            position: relative;
-            overflow: hidden;
-            transition: background 0.3s ease;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: float 8s ease-in-out infinite;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: floatReverse 10s ease-in-out infinite;
-        }
-
-        .ai-particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 50%;
-            animation: particleFloat 15s infinite;
-            opacity: 0.4;
-        }
-
-        .particle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
-        .particle:nth-child(2) { top: 40%; left: 30%; animation-delay: 2s; }
-        .particle:nth-child(3) { top: 60%; left: 70%; animation-delay: 4s; }
-        .particle:nth-child(4) { top: 80%; left: 50%; animation-delay: 6s; }
-        .particle:nth-child(5) { top: 30%; left: 80%; animation-delay: 8s; }
-
-        @keyframes particleFloat {
-            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
-            50% { transform: translate(50px, -50px) scale(1.5); opacity: 0.8; }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(30px, -30px) scale(1.1); }
-        }
-
-        @keyframes floatReverse {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(-30px, 30px) scale(1.1); }
-        }
-
-        .hero-content {
-            text-align: center;
-            max-width: 850px;
-            position: relative;
-            z-index: 1;
-            animation: fadeInUp 1s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
-            color: var(--text-primary);
-            font-weight: 700;
-            line-height: 1.2;
-            letter-spacing: -1px;
-        }
-
-        .hero h1 .highlight {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            position: relative;
-            display: inline-block;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            margin-bottom: 2.5rem;
-            line-height: 1.8;
-            font-weight: 400;
-        }
-
-        .cta-container {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .cta-button {
-            display: inline-block;
-            padding: 1.1rem 2.8rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1rem;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .cta-button:hover::before {
-            left: 100%;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
-        }
-
-        /* Categories Section */
-        .categories {
-            padding: 5rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .categories h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-            font-weight: 700;
-        }
-
-        .categories-subtitle {
-            text-align: center;
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            margin-bottom: 3rem;
-        }
-
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .category-card {
-            background: var(--card-bg);
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px var(--shadow);
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            text-align: center;
-        }
-
-        .category-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px var(--shadow-hover);
-            border-color: rgba(99, 102, 241, 0.2);
-        }
-
-        .category-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .category-card h3 {
-            font-size: 1.6rem;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        .category-card p {
-            color: var(--text-secondary);
-            line-height: 1.7;
-            margin-bottom: 1.5rem;
-        }
-
-        .category-link {
-            display: inline-block;
-            padding: 0.8rem 1.8rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .category-link:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
-        }
-
-        /* Featured Book Section */
-        .featured-book {
-            padding: 5rem 2rem;
-            background: var(--card-bg);
-            margin: 4rem 0;
-        }
-
-        .featured-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        .book-image {
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.3);
-            transition: transform 0.3s ease;
-        }
-
-        .book-image:hover {
-            transform: scale(1.05) rotate(2deg);
-        }
-
-        .book-info h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-            font-weight: 700;
-        }
-
-        .book-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 0.4rem 1.2rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-        }
-
-        .book-info p {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            line-height: 1.8;
-            margin-bottom: 2rem;
-        }
-
-        .book-info ul {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            line-height: 2;
-        }
-        
-        .book-info ul li {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            line-height: 2;
-            margin-top: 0.5rem;
-            margin-left: 1.5rem;
-        }
-        
-        /* Footer */
-        footer {
-            background: linear-gradient(135deg, var(--dark) 0%, #0f172a 100%);
-            color: white;
-            padding: 2.5rem;
-            font-size: 0.85rem;
-            border-top: 3px solid var(--primary);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .hero h1 {
-                font-size: 2.8rem;
-            }
-
-            .featured-content {
-                grid-template-columns: 1fr;
-                gap: 3rem;
-            }
-
-            .book-image {
-                max-width: 300px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            header {
-                padding: 1rem;
-            }
-
-            .menu-toggle {
-                display: flex;
-            }
-
-            .nav-links {
-                position: fixed;
-                top: 70px;
-                right: -100%;
-                width: 200px;
-                background-color: var(--header-bg);
-                backdrop-filter: blur(10px);
-                flex-direction: column;
-                padding: 1.5rem 1rem;
-                box-shadow: 0 5px 20px rgba(99, 102, 241, 0.2);
-                transition: right 0.3s;
-                gap: 0;
-                border-left: 2px solid rgba(99, 102, 241, 0.2);
-                align-items: stretch;
-            }
-
-            .nav-links a {
-                padding: 0.8rem 1rem;
-                border-radius: 8px;
-                transition: all 0.3s;
-                text-align: left;
-                font-size: 0.95rem;
-            }
-
-            .nav-links a:hover {
-                background-color: rgba(99, 102, 241, 0.1);
-            }
-
-            .nav-links a::after {
-                display: none;
-            }
-
-            .nav-links.active {
-                right: 0;
-            }
-
-            .nav-actions {
-                flex-direction: column;
-                gap: 1rem;
-                width: 100%;
-                padding-top: 1rem;
-                margin-top: 1rem;
-                border-top: 1px solid rgba(99, 102, 241, 0.15);
-            }
-
-            .nav-actions .toggle-container {
-                justify-content: center;
-            }
-
-            .nav-actions > div:last-child {
-                margin: 0 auto;
-            }
-
-            .logo {
-                font-size: 1.2rem;
-            }
-
-            .hero {
-                min-height: calc(100vh - 70px);
-                padding: 2rem 1.5rem;
-            }
-
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-
-            .hero p {
-                font-size: 1rem;
-            }
-
-            .cta-button {
-                padding: 1rem 2rem;
-                font-size: 0.95rem;
-            }
-
-            .categories {
-                padding: 3rem 1.5rem;
-            }
-
-            .categories h2 {
-                font-size: 1.8rem;
-            }
-
-            .categories-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .book-info h2 {
-                font-size: 1.8rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            #page-about > section:nth-child(2) > div {
-                grid-template-columns: 1fr !important;
-                gap: 2rem !important;
-            }
-            
-            #page-about img[alt="Philippe Notot"] {
-                max-width: 200px !important;
-                margin: 0 auto !important;
-            }
-
-            #page-adapt .featured-content > div:first-child,
-            #page-adapt > section:nth-child(2) > div > div > div:first-child {
-                grid-template-columns: 1fr !important;
-                gap: 2rem !important;
-            }
-
-            #page-adapt img,
-            #page-adapt > section:nth-child(2) > div > div > div:first-child > div > div {
-                max-width: 250px !important;
-                margin: 0 auto !important;
-            }
-
-            #page-adapt h3 {
-                font-size: 1.5rem !important;
-            }
-
-            #page-adapt > section:last-child h2 {
-                font-size: 1.8rem !important;
-            }
-
-            #page-you h2 {
-                font-size: 1.8rem !important;
-            }
-
-            #page-you > section:nth-child(3) > div > div {
-                padding: 2rem !important;
-            }
-
-            #page-you > section:last-child > div > div {
-                grid-template-columns: 1fr !important;
-            }
-
-            /* Fix for ADAPT page book layouts on mobile */
-            #page-adapt > section:nth-child(2) > div > div {
-                grid-template-columns: 1fr !important;
-                gap: 2rem !important;
-            }
-
-            #page-adapt > section:nth-child(2) > div > div > div {
-                text-align: center;
-            }
-
-            #page-adapt > section:nth-child(2) > div > div > div > div {
-                display: grid !important;
-                grid-template-columns: 1fr !important;
-                gap: 2rem !important;
-            }
-
-            #page-adapt img {
-                max-width: 200px !important;
-                margin: 0 auto !important;
-            }
-
-        }
-
-        @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 1.8rem;
-            }
-
-            .cta-container {
-                flex-direction: column;
-                gap: 0.8rem;
-            }
-
-            .cta-button {
-                width: 100%;
-            }
-        }
-    </style>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-74YL0LPJZ5"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-74YL0LPJZ5', { 'anonymize_ip': true });
-    </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Efficiency Adaptive</title>
+
+  <!-- Google Font: Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #0a0a0a;
+      --muted: #6b6b6b;
+      --card: rgba(245, 245, 247, 0.9);
+      --border: rgba(60, 60, 67, 0.15);
+      --hairline: rgba(60, 60, 67, 0.08);
+      --shadow: 0 18px 60px rgba(0,0,0,0.08);
+      --shadow-soft: 0 10px 30px rgba(0,0,0,0.06);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --gradient: linear-gradient(135deg, #4f7cff, #7a5cff);
+      --bg-wash: radial-gradient(1200px 800px at 20% -10%, rgba(79,124,255,0.12), transparent 55%),
+                 radial-gradient(1200px 800px at 80% 0%, rgba(122,92,255,0.10), transparent 55%),
+                 radial-gradient(900px 600px at 50% 110%, rgba(0,0,0,0.03), transparent 60%);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0b0b0f;
+      --text: #f5f5f7;
+      --muted: #a1a1a6;
+      --card: rgba(28, 28, 30, 0.78);
+      --border: rgba(235, 235, 245, 0.16);
+      --hairline: rgba(235, 235, 245, 0.10);
+      --shadow: 0 22px 70px rgba(0,0,0,0.55);
+      --shadow-soft: 0 12px 40px rgba(0,0,0,0.45);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --gradient: linear-gradient(135deg, #6aa0ff, #9a7bff);
+      --bg-wash: radial-gradient(1200px 800px at 20% -10%, rgba(106,160,255,0.18), transparent 55%),
+                 radial-gradient(1200px 800px at 80% 0%, rgba(154,123,255,0.14), transparent 55%),
+                 radial-gradient(900px 600px at 50% 110%, rgba(255,255,255,0.04), transparent 60%);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      letter-spacing: -0.01em;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: var(--bg-wash);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 28px 24px 90px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      margin-bottom: 80px;
+      backdrop-filter: saturate(180%) blur(18px);
+      -webkit-backdrop-filter: saturate(180%) blur(18px);
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+      font-size: 14px;
+      letter-spacing: 0.2px;
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .brand strong {
+      color: var(--text);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--gradient);
+      box-shadow: 0 8px 20px rgba(79,124,255,0.22);
+    }
+
+    .controls {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .segmented {
+      display: inline-flex;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 3px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .segmented button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 160ms ease, color 160ms ease;
+    }
+
+    .segmented button[aria-pressed="true"] {
+      background: var(--card);
+      color: var(--text);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.02);
+      user-select: none;
+    }
+
+    .toggle span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .switch {
+      width: 40px;
+      height: 22px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      position: relative;
+      background: rgba(120,120,128,0.12);
+      cursor: pointer;
+      transition: background 180ms ease;
+    }
+
+    .switch::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: #fff;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+      transform: translateX(0);
+      transition: transform 180ms ease;
+    }
+
+    [data-theme="dark"] .switch::after {
+      background: #f5f5f7;
+    }
+
+    .switch[aria-checked="true"] {
+      background: linear-gradient(135deg, rgba(79,124,255,0.55), rgba(122,92,255,0.55));
+    }
+
+    .switch[aria-checked="true"]::after {
+      transform: translateX(18px);
+    }
+
+    .icon-btn {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-family: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--text);
+      transition: background 160ms ease, transform 160ms ease;
+    }
+
+    .icon-btn:hover {
+      background: var(--card);
+      transform: translateY(-1px);
+    }
+
+    .hero {
+      text-align: center;
+      margin: 92px 0 110px;
+    }
+
+    .hero h1 {
+      font-size: clamp(40px, 6vw, 64px);
+      font-weight: 600;
+      margin-bottom: 18px;
+      letter-spacing: -0.03em;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      max-width: 720px;
+      margin: 0 auto;
+      font-size: 18px;
+      color: var(--muted);
+    }
+
+    .hero .sub {
+      margin-top: 18px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .hero .sub a {
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid var(--hairline);
+      padding-bottom: 2px;
+    }
+
+    .hero .sub a:hover {
+      border-bottom-color: var(--border);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 120px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 22px 20px;
+      box-shadow: var(--shadow-soft);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .card h2 {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    footer {
+      border-top: 1px solid var(--hairline);
+      padding: 38px 24px 80px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    footer nav {
+      margin-bottom: 14px;
+    }
+
+    footer a {
+      color: var(--muted);
+      text-decoration: none;
+      margin: 0 10px;
+      padding-bottom: 2px;
+      border-bottom: 1px solid transparent;
+    }
+
+    footer a:hover {
+      color: var(--text);
+      border-bottom-color: var(--hairline);
+    }
+
+    @media (max-width: 860px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      header {
+        margin-bottom: 58px;
+      }
+      .hero {
+        margin: 70px 0 80px;
+        text-align: left;
+      }
+      .hero p {
+        margin: 0;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .controls {
+        gap: 10px;
+      }
+      .toggle span {
+        display: none;
+      }
+    }
+  </style>
 </head>
-<body>
-    <header>
-        <nav>
-            <div class="logo" onclick="navigateTo('index')">
-                EFFICIENCY <span class="adaptive">ADAPTIVE</span>
-                <p><small style="font-size: 0.7em; color:#ccc; font-weight: 400;">LIBRARY</small></p>
-                <p style="font-size: 0.6em; color: #999; font-weight: 400; line-height: 3;">ADAPT System™ · ADAPT Core™ · ADAPT Circle™</p>
-            </div>
-            
-            <div class="menu-toggle" onclick="toggleMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
 
-            <div class="nav-links" id="navLinks">
-                <a href="#" class="nav-link active" data-page="adapt">ADAPT</a>
-                <a href="#" class="nav-link" data-page="you">YOU</a>
-                <div class="nav-actions">
-                    <div class="toggle-container">
-                        <span class="toggle-label" style="margin-right: 0.5rem;">☀️</span>
-                        <div class="toggle" id="darkModeToggle" onclick="toggleDarkMode()"></div>
-                        <span class="toggle-label" style="margin-left: 0.5rem;">🌙</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 0.3rem; padding: 0.3rem 0.6rem; border-radius: 11px; background: rgba(99, 102, 241, 0.1); transition: all 0.3s ease; height: 22px;" onmouseover="this.style.background='rgba(99, 102, 241, 0.15)'" onmouseout="this.style.background='rgba(99, 102, 241, 0.1)'">
-                        <a href="index-fr.html#page-index" style="cursor: pointer; font-weight: 500; font-size: 0.7rem; color: var(--text-secondary); line-height: 1;" id="currentLang">FR</a>
-                        <span style="color: var(--text-secondary); font-size: 0.65rem; line-height: 1;">|</span>
-                        <span style="font-weight: 800; font-size: 0.7rem; color: var(--primary); line-height: 1;" id="otherLang">EN</span>
-                    </div>
-                </div>
-            </div>
-        </nav>
+<body data-theme="light">
+
+  <div class="container">
+    <header>
+      <div class="brand"><strong>Efficiency Adaptive</strong></div>
+
+      <div class="controls">
+        <div class="toggle" aria-label="Theme">
+          <span id="themeLabel">Light</span>
+          <div id="themeSwitch" class="switch" role="switch" tabindex="0" aria-checked="false" onclick="toggleTheme()"></div>
+        </div>
+        <div class="segmented" role="group" aria-label="Language">
+          <button id="langEn" type="button" aria-pressed="true" onclick="setLang('en')">EN</button>
+          <button id="langFr" type="button" aria-pressed="false" onclick="setLang('fr')">FR</button>
+        </div>
+      </div>
     </header>
 
-    <main id="mainContent">
-        <!-- Page Home -->
-        <div id="page-index" class="page-content">
-            <section class="hero">
-                <div class="ai-particles">
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                </div>
-                <div class="hero-content">
-                    <h1>
-                        Hello and welcome to your library of <span class="highlight">modern adaptive efficiency</span>
-                    </h1>
-                    <p>Here, efficiency adapts concretely to you — to your energy, your projects, your pace.</p>
-                    <p>Born from over 20 years of experience across agility, human performance, and AI,
-                        this approach invites you to rethink productivity in the era of <b>adaptive intelligence</b>.</p>
-                    <p><a href="#" onclick="navigateTo('about'); return false;" style="color: var(--primary); text-decoration: none; font-weight: 600; border-bottom: 1px dashed var(--primary);">Learn more about the origin →</a></p>
-                    <div class="cta-container">
-                        <a href="#" class="cta-button" onclick="navigateTo('adapt'); return false;">Discover the ADAPT series</a>
-                    </div>
-                </div>
-            </section>
+    <!-- HERO -->
+    <div class="hero" id="hero">
+      <h1 id="heroTitle">Modern efficiency.<br>Human first.</h1>
+      <p id="heroDesc">Efficiency Adaptive is a minimal hub for modern work — clarity, adaptation, and sustainable performance without noise or burnout.</p>
+      <div class="sub" id="heroSub">Start with <a href="#cards">Why / What / Who</a> — then keep it simple.</div>
+    </div>
 
-            <section class="categories">
-                <h2>Explore our collections</h2>
-                <p class="categories-subtitle">Resources for the age of artificial intelligence</p>
-                <div class="categories-grid">
-                    <div class="category-card">
-                        <div class="category-icon">📚</div>
-                        <h3>Guides</h3>
-                        <p>Practical, concrete methods to improve your daily efficiency using AI and modern tools.</p>
-                        <a href="#" class="category-link" onclick="navigateTo('adapt')">See the ADAPT series</a>
-                    </div>
-                    <div class="category-card">
-                        <div class="category-icon">📖</div>
-                        <h3>Stories</h3>
-                        <p>Discover the evolution of efficiency across different fields: software engineering, AI, and much more.</p>
-                        <a href="#" class="category-link" style="opacity: 0.6; cursor: not-allowed;">Coming soon</a>
-                    </div>
-                </div>
-            </section>
+    <div id="cards" class="grid">
+      <section class="card" id="why">
+        <h2 id="whyTitle">Why</h2>
+        <p id="whyText">Most productivity systems fail not because people lack discipline, but because they ignore how humans actually function. Efficiency Adaptive exists to put energy, context, and clarity back at the center — so effectiveness becomes sustainable, not exhausting.</p>
+      </section>
 
-            <section class="featured-book">
-                <div class="featured-content">
-                    <div style="text-align: center;">
-                        <img src="book-cover.png" alt="Modern Efficiency and Artificial Intelligence" class="book-image" style="max-width: 350px; box-shadow: 0 20px 60px rgba(99, 102, 241, 0.4);">
-                    </div>
-                    <div class="book-info">
-                        <span class="book-badge">🚀 New • ADAPT Series - Book 1</span>
-                        <h2>Modern Efficiency and Artificial Intelligence</h2>
-                        <p style="font-style: italic; color: var(--text-secondary); font-size: 1rem; margin-bottom: 1.5rem;">Less effort, more results</p>
-                        <p>This introductory guide is the first in the ADAPT series. It's for everyone (student, parent, employee, etc.) seeking personalized efficiency.</p>
-                        <p>
-                            <ul>You'll discover concrete methods to:
-                                <li>Lay the foundations of your tailor-made efficiency system.</li>
-                                <li>Understand the proper use of AI (Artificial Intelligence) to introduce automation and optimization.</li>
-                                <li>Gain time to focus on what truly matters.</li>
-                            </ul>
-                        </p>
-                        <p><strong>A practical, clear, and immediately applicable guide.</strong></p>
-                        <div class="cta-container" style="justify-content: flex-start;">
-                            <a href="https://www.amazon.ca/dp/2982406837" class="cta-button">Buy now</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
+      <section class="card" id="what">
+        <h2 id="whatTitle">What</h2>
+        <p id="whatText">Efficiency Adaptive is a living ecosystem of frameworks, reflections, and systems designed to help individuals build their own Human OS. Simple, adaptive, and aligned with real life.</p>
+      </section>
 
-        <!-- Page ADAPT -->
-        <div id="page-adapt" class="page-content" style="display: none;">
-            <section class="hero" style="min-height: auto; padding: 3rem 2rem;">
-                <div class="hero-content" style="animation: fadeInUp 0.8s ease-out;">
-                    <h1 style="font-size: 2.8rem;"><span class="highlight">ADAPT</span> Series</h1>
-                    <p style="font-size: 1.1rem; max-width: 700px; margin: 1rem auto;">3 practical guides to master modern adaptive efficiency with artificial intelligence</p>
-                </div>
-            </section>
+      <section class="card" id="who">
+        <h2 id="whoTitle">Who</h2>
+        <p id="whoText">For knowledge workers, leaders, creators, and professionals who want clarity over chaos, progress over pressure, and systems that adapt to their reality instead of fighting it.</p>
+      </section>
+    </div>
+  </div>
 
-            <section style="padding: 4rem 2rem; max-width: 1200px; margin: 0 auto;">
-                <div style="text-align: center; margin-bottom: 4rem;">
-                    <h2 style="font-size: 2.2rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1rem;">A series to transform your efficiency</h2>
-                    <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 800px; margin: 0 auto 1rem; line-height: 1.8;">
-                        The ADAPT series accompanies you on your journey toward modern adaptive efficiency. Three complementary guides, each with a practical approach and immediately applicable strategies.
-                    </p>
-                    <p style="font-size: 0.95rem; color: var(--text-secondary); font-style: italic;">
-                        This series stems from a conviction: efficiency must evolve with AI.</p>
-                    <p><a href="#" onclick="navigateTo('about'); return false;" style="color: var(--primary); text-decoration: none; font-weight: 600; border-bottom: 1px dashed var(--primary);">Discover the project's genesis →</a>
-                    </p>
-                </div>
+  <footer>
+    <nav>
+      <a href="book.html">Book</a>
+      <a href="mailto:contact@efficiency-adaptive.com">Contact</a>
+    </nav>
+    <div>Efficiency Adaptive™, ADAPT System™, ADAPT Core™, ADAPT Circle™ are trademarks used by Philippe Notot.</div>
+    <div style="margin-top:.5em">© 2025 Philippe Notot. All rights reserved.</div>
+  </footer>
 
-                <!-- Book 1 -->
-                <div style="background: var(--card-bg); border-radius: 25px; padding: 3rem; margin-bottom: 3rem; box-shadow: 0 15px 40px var(--shadow); border: 2px solid rgba(99, 102, 241, 0.1);">
-                    <div style="display: grid; grid-template-columns: 300px 1fr; gap: 3rem; align-items: center;">
-                        <div style="text-align: center;">
-                            <img src="book-cover.png" alt="Modern Efficiency and Artificial Intelligence" style="width: 100%; max-width: 280px; border-radius: 15px; box-shadow: 0 15px 35px rgba(99, 102, 241, 0.3);">
-                            <div style="margin-top: 1.5rem;">
-                                <span style="display: inline-block; background: linear-gradient(135deg, var(--success), #059669); color: white; padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem;">✓ Available now</span>
-                            </div>
-                        </div>
-                        <div>
-                            <div style="display: inline-block; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem;">Book 1 • ADAPT Series</div>
-                            <h3 style="font-size: 2rem; color: var(--text-primary); font-weight: 700; margin-bottom: 0.8rem;">Modern Efficiency and Artificial Intelligence</h3>
-                            <p style="font-style: italic; color: var(--text-secondary); font-size: 1rem; margin-bottom: 1.5rem;">Less effort, more results</p>
-                            <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.2rem;">
-                                Discover how modern, adaptive efficiency can revolutionize the way you work. This first introductory guide exposes you to the fundamental concepts and shows you how to lay the groundwork for your custom system and how to properly use AI to introduce automation, optimization, and focus on what truly matters.
-                            </p>
-                            <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem;">
-                                <strong>What you'll learn:</strong> The basics of modern adaptive efficiency. How to lay the foundations of your custom system. Practical daily use of AI. How to identify tasks for future automation. Adopting an adaptive mindset.
-                            </p>
-                            <a href="https://www.amazon.ca/dp/2982406837" style="display: inline-block; padding: 1rem 2.5rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; text-decoration: none; border-radius: 50px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);">Buy now</a>
-                        </div>
-                    </div>
-                </div>
+  <script>
+    const copy = {
+      en: {
+        heroTitle: "Modern efficiency. Human first.",
+        heroDesc: "Efficiency Adaptive is a minimal hub for modern work — clarity, adaptation, and sustainable performance without noise or burnout.",
+        heroSub: "Start with <a href=\"#cards\">Why / What / Who</a> — then keep it simple.",
+        whyTitle: "Why",
+        whyText: "Most productivity systems fail not because people lack discipline, but because they ignore how humans actually function. Efficiency Adaptive exists to put energy, context, and clarity back at the center — so effectiveness becomes sustainable, not exhausting.",
+        whatTitle: "What",
+        whatText: "Efficiency Adaptive is a living ecosystem of frameworks, reflections, and systems designed to help individuals build their own Human OS. Simple, adaptive, and aligned with real life.",
+        whoTitle: "Who",
+        whoText: "For knowledge workers, leaders, creators, and professionals who want clarity over chaos, progress over pressure, and systems that adapt to their reality instead of fighting it.",
+        themeLight: "Light",
+        themeDark: "Dark"
+      },
+      fr: {
+        heroTitle: "Efficacité moderne. Humain d’abord.",
+        heroDesc: "Efficiency Adaptive est un hub minimal pour le travail moderne — clarté, adaptation et performance durable, sans surcharge ni épuisement.",
+        heroSub: "Commence par <a href=\"#cards\">Pourquoi / Quoi / Pour qui</a> — puis reste simple.",
+        whyTitle: "Pourquoi",
+        whyText: "La plupart des systèmes de productivité échouent non par manque de discipline, mais parce qu’ils ignorent le fonctionnement humain réel. Efficiency Adaptive remet l’énergie, le contexte et la clarté au cœur — pour une efficacité durable, sans épuisement.",
+        whatTitle: "Quoi",
+        whatText: "Efficiency Adaptive est un écosystème vivant de cadres, de réflexions et de systèmes conçu pour aider chacun à construire son Human OS. Simple, adaptatif, et aligné avec la vraie vie.",
+        whoTitle: "Pour qui",
+        whoText: "Pour les professionnels, leaders, créateurs et travailleurs du savoir qui veulent la clarté plutôt que le chaos, et des systèmes qui s’adaptent à leur réalité au lieu de la combattre.",
+        themeLight: "Clair",
+        themeDark: "Sombre"
+      }
+    };
 
-                <!-- Book 2 -->
-                <div style="background: var(--card-bg); border-radius: 25px; padding: 3rem; margin-bottom: 3rem; box-shadow: 0 15px 40px var(--shadow); border: 2px solid rgba(99, 102, 241, 0.1);">
-                    <div style="display: grid; grid-template-columns: 300px 1fr; gap: 3rem; align-items: center;">
-                        <div style="text-align: center;">
-                            <div style="width: 100%; max-width: 280px; height: 420px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.1)); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto; border: 2px dashed rgba(99, 102, 241, 0.3);">
-                                <div style="text-align: center; padding: 2rem;">
-                                    <div style="font-size: 3rem; margin-bottom: 1rem;">📐</div>
-                                    <p style="color: var(--text-secondary); font-weight: 600; font-size: 0.9rem;">Cover Art Coming Soon</p>
-                                </div>
-                            </div>
-                            <div style="margin-top: 1.5rem;">
-                                <span style="display: inline-block; background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600;">Coming Soon</span>
-                            </div>
-                        </div>
-                        <div>
-                            <div style="display: inline-block; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem;">Book 2 • ADAPT Series</div>
-                            <h3 style="font-size: 2rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem;">Build your modern efficiency system</h3>
-                            <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.2rem;">
-                                Take action! This second guide helps you create your own personalized and sustainable efficiency system. Learn to structure your projects, organize your tools, and set up automations that truly work for you.
-                            </p>
-                            <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem;">
-                                <strong>What you'll build:</strong> Your adaptive task management system. Your personal automation flows. Your AI-optimized workflows. Your daily efficiency rituals.
-                            </p>
-                            <button disabled style="display: inline-block; padding: 1rem 2.5rem; background: #cbd5e0; color: #718096; border: none; border-radius: 50px; font-weight: 600; cursor: not-allowed; font-size: 1rem;">Coming soon</button>
-                        </div>
-                    </div>
-                </div>
+    let lang = 'en';
 
-                <!-- Book 3 -->
-                <div style="background: var(--card-bg); border-radius: 25px; padding: 3rem; box-shadow: 0 15px 40px var(--shadow); border: 2px solid rgba(99, 102, 241, 0.1);">
-                    <div style="display: grid; grid-template-columns: 300px 1fr; gap: 3rem; align-items: center;">
-                        <div style="text-align: center;">
-                            <div style="width: 100%; max-width: 280px; height: 420px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(99, 102, 241, 0.1)); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto; border: 2px dashed rgba(139, 92, 246, 0.3);">
-                                <div style="text-align: center; padding: 2rem;">
-                                    <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
-                                    <p style="color: var(--text-secondary); font-weight: 600; font-size: 0.9rem;">Title to be revealed</p>
-                                </div>
-                            </div>
-                            <div style="margin-top: 1.5rem;">
-                                <span style="display: inline-block; background: rgba(139, 92, 246, 0.1); color: var(--accent); padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600;">In preparation</span>
-                            </div>
-                        </div>
-                        <div>
-                            <div style="display: inline-block; background: linear-gradient(135deg, var(--accent), var(--primary)); color: white; padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem;">Book 3 • ADAPT Series</div>
-                            <h3 style="font-size: 2rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem;">Title to be revealed soon</h3>
-                            <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem;">
-                                The third and final book in the ADAPT series will allow you to go even further in your mastery of modern, adaptive efficiency. More details will be revealed soon!
-                            </p>
-                            <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem; font-style: italic;">
-                                📬 Stay tuned for the reveal of the title and content of this final guide that will complete your ADAPT journey.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+    function applyLang(next) {
+      const c = copy[next];
+      document.getElementById('heroTitle').textContent = c.heroTitle;
+      document.getElementById('heroDesc').textContent = c.heroDesc;
+      document.getElementById('heroSub').innerHTML = c.heroSub;
+      document.getElementById('whyTitle').textContent = c.whyTitle;
+      document.getElementById('whyText').textContent = c.whyText;
+      document.getElementById('whatTitle').textContent = c.whatTitle;
+      document.getElementById('whatText').textContent = c.whatText;
+      document.getElementById('whoTitle').textContent = c.whoTitle;
+      document.getElementById('whoText').textContent = c.whoText;
 
-            <!-- Call to Action -->
-            <section style="padding: 4rem 2rem; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); margin-top: 4rem;">
-                <div style="max-width: 900px; margin: 0 auto; text-align: center; color: white;">
-                    <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1.5rem;">Start your ADAPT journey today</h2>
-                    <p style="font-size: 1.2rem; line-height: 1.8; margin-bottom: 2.5rem; opacity: 0.95;">
-                        Join those who are transforming their efficiency with the modern adaptive approach. Discover the first guide in the series to lay the foundations of your custom system and learn to work smarter.
-                    </p>
-                    <a href="https://www.amazon.ca/dp/2982406837" style="display: inline-block; padding: 1.2rem 3rem; background: white; color: var(--primary); text-decoration: none; border-radius: 50px; font-weight: 700; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">Buy Book 1 now</a>
-                </div>
-            </section>
-        </div>
+      document.getElementById('langEn').setAttribute('aria-pressed', String(next === 'en'));
+      document.getElementById('langFr').setAttribute('aria-pressed', String(next === 'fr'));
 
-        <!-- Page YOU -->
-        <div id="page-you" class="page-content" style="display: none;">
-            <section class="hero" style="min-height: auto; padding: 3rem 2rem;">
-                <div class="hero-content" style="animation: fadeInUp 0.8s ease-out;">
-                    <h1 style="font-size: 2.8rem;"><span class="highlight">Readers'</span> Space</h1>
-                    <p style="font-size: 1.1rem; max-width: 700px; margin: 1rem auto;">Discover what our readers think and join our community</p>
-                </div>
-            </section>
+      const isDark = document.body.dataset.theme === 'dark';
+      document.getElementById('themeLabel').textContent = isDark ? c.themeDark : c.themeLight;
 
-            <!-- Testimonials -->
-            <section style="padding: 4rem 2rem; max-width: 1200px; margin: 0 auto;">
-                <div style="text-align: center; margin-bottom: 3rem;">
-                    <h2 style="font-size: 2.2rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1rem;">What readers say</h2>
-                    <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Feedback on "Modern Efficiency and Artificial Intelligence"</p>
-                    <p style="font-size: 0.95rem; color: var(--text-secondary); font-style: italic;">
-                        I created this space to share my experience and interact with you. <a href="#" onclick="navigateTo('about'); return false;" style="color: var(--primary); text-decoration: none; font-weight: 600; border-bottom: 1px dashed var(--primary);">Discover who I am →</a>
-                    </p>
-                </div>
+      lang = next;
+    }
 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 4rem;">
-                    <!-- Testimonial 1 -->
-                    <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); border-left: 4px solid var(--primary); transition: transform 0.3s ease;">
-                        <p style="color: var(--text-secondary); line-height: 1.8; font-style: italic; margin-bottom: 1.5rem; font-size: 1.05rem;">
-                            "This book seems very promising to improve our daily efficiency. Leveraging AI, what a great tool!"
-                        </p>
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div style="width: 50px; height: 50px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.2rem;">A</div>
-                            <div>
-                                <p style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.2rem;">Alexandre</p>
-                                <p style="font-size: 0.85rem; color: var(--text-secondary);">Reader</p>
-                            </div>
-                        </div>
-                    </div>
+    function setLang(next) {
+      applyLang(next);
+    }
 
-                    <!-- Testimonial 2 -->
-                    <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); border-left: 4px solid var(--secondary); transition: transform 0.3s ease;">
-                        <p style="color: var(--text-secondary); line-height: 1.8; font-style: italic; margin-bottom: 1.5rem; font-size: 1.05rem;">
-                            "Congratulations on the launch. I love that it's practical rather than overly technical - we need more AI tools that genuinely help us focus instead of adding more noise to our day."
-                        </p>
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div style="width: 50px; height: 50px; background: linear-gradient(135deg, var(--secondary), var(--success)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.2rem;">M</div>
-                            <div>
-                                <p style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.2rem;">Michael</p>
-                                <p style="font-size: 0.85rem; color: var(--text-secondary);">Reader</p>
-                            </div>
-                        </div>
-                    </div>
+    function toggleTheme() {
+      const body = document.body;
+      const nextTheme = body.dataset.theme === 'light' ? 'dark' : 'light';
+      body.dataset.theme = nextTheme;
 
-                    <!-- Testimonial 3 -->
-                    <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); border-left: 4px solid var(--accent); transition: transform 0.3s ease;">
-                        <p style="color: var(--text-secondary); line-height: 1.8; font-style: italic; margin-bottom: 1.5rem; font-size: 1.05rem;">
-                            "(...) Your book is a clear, concise, and practical guide to maximize efficiency. I've worked with so many people in my life who were always 'busy' but never finished their tasks on time. I hope they find your book! (...)"
-                        </p>
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div style="width: 50px; height: 50px; background: linear-gradient(135deg, var(--accent), var(--primary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.2rem;">D</div>
-                            <div>
-                                <p style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.2rem;">Dolores</p>
-                                <p style="font-size: 0.85rem; color: var(--text-secondary);">Reader</p>
-                            </div>
-                        </div>
-                    </div>
+      const checked = nextTheme === 'dark';
+      const sw = document.getElementById('themeSwitch');
+      sw.setAttribute('aria-checked', String(checked));
 
-                    <!-- Testimonial 4 -->
-                    <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); border-left: 4px solid var(--accent); transition: transform 0.3s ease;">
-                        <p style="color: var(--text-secondary); line-height: 1.8; font-style: italic; margin-bottom: 1.5rem; font-size: 1.05rem;">
-                            "A very interesting book with useful tips to put into practice. For the AI section, I'm going to get started with the advice. I left my copy at the office to spark discussions. Congratulations!"
-                        </p>
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div style="width: 50px; height: 50px; background: linear-gradient(135deg, var(--accent), var(--primary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.2rem;">D</div>
-                            <div>
-                                <p style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.2rem;">Stephane</p>
-                                <p style="font-size: 0.85rem; color: var(--text-secondary);">Reader</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+      const c = copy[lang];
+      document.getElementById('themeLabel').textContent = checked ? c.themeDark : c.themeLight;
+    }
 
-            <!-- Substack Community -->
-            <section style="padding: 4rem 2rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(6, 182, 212, 0.05));">
-                <div style="max-width: 900px; margin: 0 auto;">
-                    <div style="background: var(--card-bg); border-radius: 25px; padding: 3rem; box-shadow: 0 20px 50px var(--shadow); text-align: center;">
-                        <div style="font-size: 3.5rem; margin-bottom: 1.5rem;">🧩</div>
-                        <h2 style="font-size: 2.2rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1rem;">Join Think. Adapt. Move.</h2>
-                        <p style="font-size: 1.15rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem;">
-                            A monthly Substack community where we explore modern adaptive efficiency together.
-                        </p>
-                        <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.1)); border-radius: 15px; padding: 2rem; margin: 2rem 0; border-left: 4px solid var(--primary);">
-                            <p style="color: var(--text-primary); line-height: 1.8; font-size: 1.05rem; font-weight: 500;">
-                                📬 Each month I explore modern efficiency: how to <strong>think</strong>, <strong>adapt</strong> and <strong>move</strong> in a world shaped by technology and intention.
-                            </p>
-                        </div>
-                        <div style="margin-top: 2rem;">
-                            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1rem;">
-                                ✨ Receive exclusive insights, practical strategies, and join the discussions with other efficiency enthusiasts.
-                            </p>
-                            <a href="https://efficiencyadaptive.substack.com/" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 1.2rem 3rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);">
-                                Join the Substack community
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </section>
+    function scrollToCards() {
+      const el = document.getElementById('cards');
+      if (!el) return;
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
-            <!-- Contact -->
-            <section style="padding: 4rem 2rem; max-width: 900px; margin: 0 auto;">
-                <div style="text-align: center;">
-                    <h2 style="font-size: 2.2rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1rem;">Let's stay in touch</h2>
-                    <p style="font-size: 1.1rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 3rem; max-width: 700px; margin-left: auto; margin-right: auto;">
-                        Have questions about the book? Want to share your experience? Feel free to contact me directly.
-                    </p>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 3rem;">
-                        <!-- Email -->
-                        <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); transition: transform 0.3s ease;">
-                            <div style="font-size: 2.5rem; margin-bottom: 1rem;">✉️</div>
-                            <h3 style="font-size: 1.3rem; color: var(--text-primary); font-weight: 600; margin-bottom: 0.8rem;">Email</h3>
-                            <a href="mailto:phil@efficiency-adaptive.com" style="color: var(--primary); text-decoration: none; font-weight: 500; font-size: 1rem; word-break: break-all;">phil@efficiency-adaptive.com</a>
-                        </div>
+    // Allow keyboard toggle on the theme switch
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const active = document.activeElement;
+      if (active && active.id === 'themeSwitch') {
+        e.preventDefault();
+        toggleTheme();
+      }
+    });
 
-                        <!-- Substack -->
-                        <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); transition: transform 0.3s ease;">
-                            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🧩</div>
-                            <h3 style="font-size: 1.3rem; color: var(--text-primary); font-weight: 600; margin-bottom: 0.8rem;">Newsletter</h3>
-                            <a href="https://efficiencyadaptive.substack.com/" target="_blank" rel="noopener noreferrer" style="color: var(--secondary); text-decoration: none; font-weight: 500; font-size: 1rem;">Think. Adapt. Move.</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
+    // Init
+    (function init() {
+      document.body.dataset.theme = 'light';
+      document.getElementById('themeSwitch').setAttribute('aria-checked', 'false');
+      applyLang('en');
+    })();
+  </script>
 
-            <!-- Call to Action -->
-            <section style="padding: 3rem 2rem; background: var(--card-bg); margin-top: 3rem; box-shadow: 0 -10px 30px var(--shadow);">
-                <div style="max-width: 800px; margin: 0 auto; text-align: center;">
-                    <h3 style="font-size: 1.8rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1rem;">Ready to transform your efficiency?</h3>
-                    <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.8;">
-                        Discover the first guide of the ADAPT series and start your journey to establish the foundations of a tailored productivity.
-                    </p>
-                    <a href="#" onclick="navigateTo('adapt'); return false;" style="display: inline-block; padding: 1.1rem 2.8rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 1rem; transition: all 0.3s ease; box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);">
-                        Discover the ADAPT series
-                    </a>
-                </div>
-            </section>
-        </div>
-
-        <!-- Page Legal -->
-        <div id="page-legal" class="page-content" style="display: none;">
-            <section class="hero" style="min-height: auto; padding: 3rem 2rem;">
-                <div class="hero-content" style="animation: fadeInUp 0.8s ease-out;">
-                    <h1 style="font-size: 2.8rem;">Legal Notice and <span class="highlight">Terms of Use</span></h1>
-                    <p style="font-size: 1rem; max-width: 700px; margin: 1rem auto;">Legal information and site terms of use</p>
-                </div>
-            </section>
-
-            <section style="padding: 4rem 2rem; max-width: 900px; margin: 0 auto;">
-                <!-- 1. Publisher and Contact -->
-                <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); margin-bottom: 2rem;">
-                    <h2 style="font-size: 1.8rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem; border-left: 4px solid var(--primary); padding-left: 1rem;">1. Publisher and Contact</h2>
-                    
-                    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
-                        <tbody>
-                            <tr style="border-bottom: 1px solid rgba(99, 102, 241, 0.1);">
-                                <td style="padding: 1rem 0; font-weight: 600; color: var(--text-primary); width: 40%;">Site publisher</td>
-                                <td style="padding: 1rem 0; color: var(--text-secondary);">Philippe Notot, residing in Canada</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid rgba(99, 102, 241, 0.1);">
-                                <td style="padding: 1rem 0; font-weight: 600; color: var(--text-primary);">Contact email</td>
-                                <td style="padding: 1rem 0;"><a href="mailto:phil@efficiency-adaptive.com" style="color: var(--primary); text-decoration: none;">phil@efficiency-adaptive.com</a></td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid rgba(99, 102, 241, 0.1);">
-                                <td style="padding: 1rem 0; font-weight: 600; color: var(--text-primary);">Hosting provider</td>
-                                <td style="padding: 1rem 0; color: var(--text-secondary);">GitHub Pages</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid rgba(99, 102, 241, 0.1);">
-                                <td style="padding: 1rem 0; font-weight: 600; color: var(--text-primary);">Siège social de l'Hosting provider</td>
-                                <td style="padding: 1rem 0; color: var(--text-secondary);">San Francisco, Californie, États-Unis</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 1rem 0; font-weight: 600; color: var(--text-primary);">Administrative address (Publisher)</td>
-                                <td style="padding: 1rem 0; color: var(--text-secondary);">St-Augustin-de-Desmaures, QC, Canada</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- 2. Intellectual Property -->
-                <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); margin-bottom: 2rem;">
-                    <h2 style="font-size: 1.8rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem; border-left: 4px solid var(--secondary); padding-left: 1rem;">2. Intellectual Property</h2>
-                    <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1rem;">
-                        All content on this site, including texts, images, graphics, logos, and the ADAPT guide series, is the exclusive property of <strong>Philippe Notot</strong> and is protected by Canadian copyright laws.
-                    </p>
-                    <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1rem;"">
-                        Any reproduction, modification, or use, even partial, of this content is strictly prohibited without our written permission.
-                    </p>
-                    <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1rem;">
-                        ADAPT System™, ADAPT Core™, and ADAPT Circle™ are trademarks used by Philippe Notot.
-                    </p>   
-                    <p style="color: var(--text-secondary); line-height: 1.8;">
-                        All content, visuals, frameworks, and materials related to the ADAPT ecosystem (including names, structures, conceptual models, icons, or visual representations) are protected under intellectual property rights.
-                        No part of these materials may be reproduced or reused without prior authorization.
-                    </p>
-                </div>
-
-                <!-- 3. Nature of Content -->
-                <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); margin-bottom: 2rem;">
-                    <h2 style="font-size: 1.8rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem; border-left: 4px solid var(--accent); padding-left: 1rem;">3. Nature of the Content and Limitation of Liability</h2>
-                    <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1rem;">
-                        The information and guides (ADAPT series) offered on this site aim to share general methods and advice on personal efficiency and organization. This information is provided for guidance and does not replace professional, legal, or financial advice.
-                    </p>
-                    <p style="color: var(--text-secondary); line-height: 1.8;">
-                        By using this website, you acknowledge that Philippe Notot cannot be held liable for any direct or indirect damages resulting from the interpretation or application of the information contained herein.
-                    </p>
-                </div>
-
-                <!-- 4. Privacy -->
-                <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); margin-bottom: 2rem;">
-                    <h2 style="font-size: 1.8rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem; border-left: 4px solid var(--success); padding-left: 1rem;">4. Privacy and Data Management</h2>
-                    <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1rem;">
-                        Our site does not collect personally identifying data (name, email address, postal address, payment information).
-                    </p>
-                    <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1rem;">
-                        Newsletter subscriptions and purchase transactions are managed by third-party platforms: <strong>Substack</strong> for communications and <strong>Amazon</strong> for purchase and delivery of books. These platforms are responsible for the management of personal data that you provide to them.
-                    </p>
-                    <p style="color: var(--text-secondary); line-height: 1.8;">
-                        For more details on the management of technical data and links to our partners' policies, please see our <a href="#" onclick="navigateTo('privacy'); return false;" style="color: var(--primary); text-decoration: none; font-weight: 600; border-bottom: 1px solid var(--primary);">Full Privacy Policy →</a>
-                    </p>
-                </div>
-
-                <!-- 5. Applicable Law -->
-                <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(6, 182, 212, 0.05)); padding: 2.5rem; border-radius: 20px; border: 2px solid rgba(99, 102, 241, 0.1);">
-                    <h2 style="font-size: 1.8rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem;">5. Applicable Law</h2>
-                    <p style="color: var(--text-secondary); line-height: 1.8;">
-                        These legal notices are governed by the laws in force in the <strong>province of Quebec</strong> and the <strong>federal laws of Canada</strong>.
-                    </p>
-                </div>
-
-                <!-- Last Updated -->
-                <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(99, 102, 241, 0.1);">
-                    <p style="color: var(--text-secondary); font-size: 0.9rem; font-style: italic;">
-                        Last updated: November 2025
-                    </p>
-                </div>
-            </section>
-        </div>
-
-        <!-- Policy Page -->
-        <div id="page-privacy" class="page-content" style="display: none;">
-            <section class="hero" style="min-height: auto; padding: 3rem 2rem;">
-                <div class="hero-content" style="animation: fadeInUp 0.8s ease-out;">
-                    <h1 style="font-size: 2.8rem;">Privacy <span class="highlight">Policy</span></h1>
-                    <p style="font-size: 1rem; max-width: 700px; margin: 1rem auto;">Protecting your personal information</p>
-                </div>
-            </section>
-
-            <section style="padding: 4rem 2rem; max-width: 900px; margin: 0 auto;">
-                <!-- 1. Introduction -->
-                <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); margin-bottom: 2rem;">
-                    <h2 style="font-size: 1.8rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem; border-left: 4px solid var(--primary); padding-left: 1rem;">1. Introduction</h2>
-                    <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1rem;">
-                        This Privacy Policy describes how <strong>Philippe Notot</strong> (hereinafter 'we' or 'our site') handles the personal information of users of our website <strong>efficiency-adaptive.com</strong>, in connection with our partners Substack and Amazon.
-                    </p>
-                    <p style="color: var(--text-secondary); line-height: 1.8;">
-                        We comply with the provisions of the <strong>Personal Information Protection and Electronic Documents Act (PIPEDA)</strong> of Canada, as well as applicable provincial legislation (including <strong>Law 25 of Quebec</strong>, if relevant).
-                    </p>
-                </div>
-
-                <!-- 2. Responsible -->
-                <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); margin-bottom: 2rem;">
-                    <h2 style="font-size: 1.8rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem; border-left: 4px solid var(--secondary); padding-left: 1rem;">2. Person Responsible for the Protection of Personal Information</h2>
-                    <div style="background: rgba(99, 102, 241, 0.05); padding: 1.5rem; border-radius: 15px; margin-top: 1rem;">
-                        <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 0.8rem;">
-                            <strong style="color: var(--text-primary);">Name of the Responsible Person:</strong> Philippe Notot
-                        </p>
-                        <p style="color: var(--text-secondary); line-height: 1.8;">
-                            <strong style="color: var(--text-primary);">Responsible Person Contact:</strong> <a href="mailto:phil@efficiency-adaptive.com" style="color: var(--primary); text-decoration: none; font-weight: 600;">phil@efficiency-adaptive.com</a>
-                        </p>
-                    </div>
-                </div>
-
-                <!-- 3. Collect of Information -->
-                <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); margin-bottom: 2rem;">
-                    <h2 style="font-size: 1.8rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem; border-left: 4px solid var(--accent); padding-left: 1rem;">3. Collection of Personal Information</h2>
-                    <h3 style="font-size: 1.3rem; color: var(--text-primary); font-weight: 600; margin-bottom: 1rem; margin-top: 1.5rem;">Information collected directly by the site (Minimal):</h3>
-                    <p style="color: var(--text-secondary); line-height: 1.8;">
-                        We do not directly collect any personally identifying data (name, email, address) through this site. The only data collected are <strong>technical and anonymous</strong>, such as IP address, browser type, pages visited, and visit duration, via analytics tools (see Section 6).
-                    </p>
-                </div>
-
-                <!-- 4. Sales and Newsletter -->
-                <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); margin-bottom: 2rem;">
-                    <h2 style="font-size: 1.8rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem; border-left: 4px solid var(--success); padding-left: 1rem;">4. Sales of Guides and Newsletters (Third-Party Platforms)</h2>
-                    <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem;">
-                        We use specialized platforms that manage all personal information related to sales and communications.
-                    </p>
-                    
-                    <div style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.05), rgba(16, 185, 129, 0.05)); padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem; border-left: 3px solid var(--secondary);">
-                        <h4 style="font-size: 1.1rem; color: var(--text-primary); font-weight: 600; margin-bottom: 0.8rem;">📬 Newsletter</h4>
-                        <p style="color: var(--text-secondary); line-height: 1.8;">
-                            Newsletter signup and management of your email are entirely handled by <strong>Substack</strong>. The privacy rules and terms applicable to your data are those of Substack. We invite you to consult their <a href="https://substack.com/privacy" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: none; font-weight: 600; border-bottom: 1px solid var(--primary);">privacy policy</a>.
-                        </p>
-                    </div>
-
-                    <div style="background: linear-gradient(135deg, rgba(255, 153, 0, 0.05), rgba(255, 193, 7, 0.05)); padding: 1.5rem; border-radius: 15px; border-left: 3px solid #ff9900;">
-                        <h4 style="font-size: 1.1rem; color: var(--text-primary); font-weight: 600; margin-bottom: 0.8rem;">📦 Purchase of Guides</h4>
-                        <p style="color: var(--text-secondary); line-height: 1.8;">
-                            Purchasing, payment, and delivery of our guides (ADAPT series) are handled exclusively by <strong>Amazon</strong>. Amazon is responsible for collecting and processing your payment and delivery information.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- 5. Use -->
-                <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); margin-bottom: 2rem;">
-                    <h2 style="font-size: 1.8rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem; border-left: 4px solid var(--primary); padding-left: 1rem;">5. Use of Personal Information</h2>
-                    <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1rem;">
-                        The technical data we collect (IP, traffic) are used only to:
-                    </p>
-                    <ul style="color: var(--text-secondary); line-height: 1.8; margin-left: 1.5rem;">
-                        <li style="margin-bottom: 0.5rem;">Improve the site's technical performance.</li>
-                        <li>Analyze page usage and effectiveness (view statistics).</li>
-                    </ul>
-                </div>
-
-                <!-- 6. Cookies -->
-                <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); margin-bottom: 2rem;">
-                    <h2 style="font-size: 1.8rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem; border-left: 4px solid var(--secondary); padding-left: 1rem;">6. Use of Cookies and Analytics Tools</h2>
-                    <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem;">
-                        Our site uses cookies via <strong>Google Analytics</strong> to collect the technical data mentioned above. These tools help us measure traffic and optimize the user experience.
-                    </p>
-                    
-                    <div style="background: linear-gradient(135deg, rgba(234, 67, 53, 0.05), rgba(66, 133, 244, 0.05)); padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem; border-left: 3px solid #4285f4;">
-                        <h4 style="font-size: 1.1rem; color: var(--text-primary); font-weight: 600; margin-bottom: 0.8rem;">📊 Google Analytics</h4>
-                        <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1rem;">
-                            We use Google Analytics to analyze our website usage. This tool collects anonymous information such as:
-                        </p>
-                        <ul style="color: var(--text-secondary); line-height: 1.8; margin-left: 1.5rem; margin-bottom: 1rem;">
-                            <li style="margin-bottom: 0.5rem;">Your (anonymized) IP address</li>
-                            <li style="margin-bottom: 0.5rem;">Pages visited and their consultation duration (or time spent on pages)</li>
-                            <li style="margin-bottom: 0.5rem;">The type of device and browser used</li>
-                            <li>Geographic location (city/region)</li>
-                        </ul>
-                        <p style="color: var(--text-secondary); line-height: 1.8;">
-                            For more information on how Google handles your data, consult the <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: none; font-weight: 600; border-bottom: 1px solid var(--primary);">Google's Privacy Policy</a> and <a href="https://support.google.com/analytics/answer/6004245" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: none; font-weight: 600; border-bottom: 1px solid var(--primary);">Google Analytics' Terms of Service</a>.
-                        </p>
-                    </div>
-
-                    <div style="background: rgba(99, 102, 241, 0.05); padding: 1.5rem; border-radius: 15px;">
-                        <h4 style="font-size: 1.1rem; color: var(--text-primary); font-weight: 600; margin-bottom: 0.8rem;">🍪 Cookie Management</h4>
-                        <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1rem;">
-                            You can configure your browser to refuse or warn you about the presence of cookies. You can also disable Google Analytics by installing the <a href="https://tools.google.com/dlpage/gaoptout?hl=fr" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: none; font-weight: 600; border-bottom: 1px solid var(--primary);">browser add-on to opt out of Google Analytics</a>.
-                        </p>
-                        <p style="color: var(--text-secondary); line-height: 1.8; font-size: 0.9rem; font-style: italic;">
-                            Note: Disabling cookies may affect certain site features.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- 7. Your Rights -->
-                <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); margin-bottom: 2rem;">
-                    <h2 style="font-size: 1.8rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem; border-left: 4px solid var(--accent); padding-left: 1rem;">7. Your Rights</h2>
-                    <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem;">
-                        Given the limited collection of personal data by our site, your rights of access and rectification regarding your name, email, or address must be exercised directly with our partners:
-                    </p>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
-                        <div style="background: rgba(6, 182, 212, 0.05); padding: 1.5rem; border-radius: 15px; border: 1px solid rgba(6, 182, 212, 0.2);">
-                            <p style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">📬 For the newsletter:</p>
-                            <p style="color: var(--text-secondary); line-height: 1.8;">Contact Substack</p>
-                        </div>
-                        <div style="background: rgba(255, 153, 0, 0.05); padding: 1.5rem; border-radius: 15px; border: 1px solid rgba(255, 153, 0, 0.2);">
-                            <p style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">📦 For orders:</p>
-                            <p style="color: var(--text-secondary); line-height: 1.8;">Contact Amazon</p>
-                        </div>
-                    </div>
-                    <p style="color: var(--text-secondary); line-height: 1.8;">
-                        For any questions regarding technical data collected directly on this domain, you may contact our Responsible for the Protection of Personal Information (Section 2).
-                    </p>
-                </div>
-
-                <!-- 8. Security -->
-                <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(6, 182, 212, 0.05)); padding: 2.5rem; border-radius: 20px; border: 2px solid rgba(99, 102, 241, 0.1);">
-                    <h2 style="font-size: 1.8rem; color: var(--text-primary); font-weight: 700; margin-bottom: 1.5rem;">8. Security and Applicable Law</h2>
-                    <div style="margin-bottom: 1.5rem;">
-                        <h4 style="font-size: 1.2rem; color: var(--text-primary); font-weight: 600; margin-bottom: 0.8rem;">🔒 Security</h4>
-                        <p style="color: var(--text-secondary); line-height: 1.8;">
-                            We take reasonable measures to protect the technical data collected against unauthorized access.
-                        </p>
-                    </div>
-                    <div>
-                        <h4 style="font-size: 1.2rem; color: var(--text-primary); font-weight: 600; margin-bottom: 0.8rem;">⚖️ Applicable Law</h4>
-                        <p style="color: var(--text-secondary); line-height: 1.8;">
-                            This policy is governed by the laws in effect in the <strong>Province of Quebec</strong> and the <strong>federal laws of Canada</strong>.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Last Update-->
-                <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(99, 102, 241, 0.1);">
-                    <p style="color: var(--text-secondary); font-size: 0.9rem; font-style: italic;">
-                        Last updated: November 2025
-                    </p>
-                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 1rem;">
-                        <a href="#" onclick="navigateTo('legal'); return false;" style="color: var(--primary); text-decoration: none; font-weight: 600;">← Back to Legal</a>
-                    </p>
-                </div>
-            </section>
-        </div>
-
-        <!-- About Page -->
-        <div id="page-about" class="page-content" style="display: none;">
-            <section class="hero" style="min-height: auto; padding: 3rem 2rem;">
-                <div class="hero-content" style="animation: fadeInUp 0.8s ease-out;">
-                    <h1 style="font-size: 2.8rem;">About... <span class="highlight">the author</span></h1>
-                    <p style="font-size: 1.1rem; max-width: 700px; margin: 1rem auto;">"Guiding You Towards Modern, Adaptive Efficiency"</p>
-                </div>
-            </section>
-
-            <section style="padding: 4rem 2rem; max-width: 1000px; margin: 0 auto;">
-                <div style="display: grid; grid-template-columns: 300px 1fr; gap: 3rem; align-items: start; margin-bottom: 3rem;">
-                    <div style="text-align: center;">
-                        <img src="philippe-photo.jpg" alt="Philippe Notot" style="width: 50%; max-width: 280px; border-radius: 50%; box-shadow: 0 15px 40px rgba(99, 102, 241, 0.3); margin-bottom: 1rem;">
-                        <p style="color: var(--text-primary); font-size: 1.3rem; font-weight: 600; margin-top: 1rem;">Phil</p>
-                    </div>
-                    <div>
-                        <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow); margin-bottom: 2rem;">
-                            <h2 style="color: var(--text-primary); font-size: 1.8rem; margin-bottom: 1.5rem; font-weight: 600;">Journey</h2>
-                            <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.2rem; text-align: justify;">
-                                My name is Philippe Notot — but you can call me Phil, like my colleagues and friends do.
-                            </p>
-                            <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.2rem; text-align: justify;">
-                                I’ve been working in information technology (IT) for over twenty years, driven by a constant passion for efficiency and the evolution of modern work practices.
-                            </p>
-                            <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.2rem; text-align: justify;">
-                                I’ve had the privilege of guiding many teams and organizations through their transformation, helping them adapt the way they collaborate, organize, and grow.
-                            </p>
-                            <p style="color: var(--text-secondary); line-height: 1.8; text-align: justify;">
-                                Today, I’m sharing adaptive practices for modern efficiency with you. From Quebec (Canada), I combine a pragmatic approach to productivity with the possibilities offered by new technologies — especially artificial intelligence — to make these tools accessible to everyone, both individually and collectively.
-                            </p>
-                        </div>
-
-                        <div style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); padding: 2.5rem; border-radius: 20px; box-shadow: 0 15px 40px rgba(99, 102, 241, 0.3); color: white;">
-                            <h2 style="font-size: 1.8rem; margin-bottom: 1.5rem; font-weight: 600;">Mission</h2>
-                            <p style="line-height: 1.8; font-size: 1.05rem; text-align: justify;">
-                                Through the ADAPT series, I share with you concrete, clear, and immediately applicable strategies, with a simple goal: <strong>to help you work smarter, not longer.</strong>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section style="padding: 3rem 2rem; background: var(--card-bg); margin-top: 3rem;">
-                <div style="max-width: 800px; margin: 0 auto; text-align: center;">
-                    <h2 style="color: var(--text-primary); font-size: 2rem; margin-bottom: 2rem; font-weight: 700;">Let's stay in touch</h2>
-                    <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 2rem; line-height: 1.8;">
-                        Do you have questions? Want to discuss modern, adaptive efficiency and AI? Don't hesitate to contact me.
-                    </p>
-                    <a href="mailto:phil@efficiency-adaptive.com" style="display: inline-flex; align-items: center; gap: 0.8rem; padding: 1rem 2.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 1rem; transition: all 0.3s ease; box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);">
-                        ✉️ phil@efficiency-adaptive.com
-                    </a>
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <footer>
-        <div style="max-width: 1200px; margin: 0 auto;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
-                <div style="display: flex; align-items: center; gap: 0.8rem;">
-                    <img src="philippe-photo.jpg" alt="Phil" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid rgba(99, 102, 241, 0.5);">
-                    <div style="text-align: left;">
-                        <p style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem;">Phil</p>
-                        <p style="font-size: 0.75rem; opacity: 0.8;">Passionate about modern adaptive efficiency, amplified by AI.</p>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 0.85rem;">
-                    <a href="#" onclick="navigateTo('about'); return false;" style="color: white; text-decoration: none; opacity: 0.9; transition: opacity 0.3s; font-weight: 500;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.9'">About</a>
-                    <a href="#" onclick="navigateTo('legal'); return false;" style="color: white; text-decoration: none; opacity: 0.9; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.9'">Legal</a>
-                    <a href="#" onclick="navigateTo('privacy'); return false;" style="color: white; text-decoration: none; opacity: 0.9; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.9'">Privacy</a>
-                </div>
-            </div>
-            <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
-                <p style="font-weight:500; line-height: 2;">© 2025 Efficiency Adaptive</p>
-                <p style="font-size: 0.75rem; line-height: 2;">A modern library dedicated to adaptive efficiency and AI.</p>
-                <p style="font-weight:500; line-height: 2; padding-top: 1rem;">ADAPT System™ · ADAPT Core™ · ADAPT Circle™</p>
-                <p style="font-size: 0.75rem; line-height: 2;">are trademarks used by Philippe Notot. All rights reserved.</p>
-            </div> 
-        </div>
-    </footer>
-
-    <script>
-        // Dark Mode Toggle
-        function toggleDarkMode() {
-            const body = document.body;
-            const toggle = document.getElementById('darkModeToggle');
-            
-            body.classList.toggle('dark-mode');
-            toggle.classList.toggle('active');
-            
-            if (body.classList.contains('dark-mode')) {
-                localStorage.setItem('darkMode', 'enabled');
-            } else {
-                localStorage.setItem('darkMode', 'disabled');
-            }
-        }
-
-        // Load dark mode preference
-        window.addEventListener('DOMContentLoaded', (event) => {
-            const darkMode = localStorage.getItem('darkMode');
-            const toggle = document.getElementById('darkModeToggle');
-            
-            if (darkMode === 'enabled') {
-                document.body.classList.add('dark-mode');
-                toggle.classList.add('active');
-            }
-        });
-
-        // Toggle mobile menu
-        function toggleMenu() {
-            const navLinks = document.getElementById('navLinks');
-            navLinks.classList.toggle('active');
-        }
-
-        // Toggle language
-        function toggleLanguage() {
-            const currentLang = document.getElementById('currentLang');
-            const otherLang = document.getElementById('otherLang');
-            
-            if (currentLang.textContent === 'FR') {
-                // Switch to English version
-                window.location.href = 'index-en.html';
-            } else {
-                // Switch to French version
-                window.location.href = 'index.html';
-            }
-        }
-
-        // Navigation between pages
-        function navigateTo(page) {
-            // Close mobile menu
-            document.getElementById('navLinks').classList.remove('active');
-            
-            // Update active nav link
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-                if (link.dataset.page === page) {
-                    link.classList.add('active');
-                }
-            });
-            
-            // Hide all pages
-            document.querySelectorAll('.page-content').forEach(p => {
-                p.style.display = 'none';
-            });
-            
-            // Show selected page or index if it doesn't exist as nav link
-            let pageElement = document.getElementById('page-' + page);
-            if (!pageElement && page === 'index') {
-                pageElement = document.getElementById('page-index');
-            }
-            if (pageElement) {
-                pageElement.style.display = 'block';
-            }
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Initialize: Show ADAPT page by default since ACCUEIL is removed
-        window.addEventListener('DOMContentLoaded', (event) => {
-            navigateTo('index');
-        });
-
-        // Add click handlers to nav links
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                navigateTo(link.dataset.page);
-            });
-        });
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(event) {
-            const nav = document.querySelector('nav');
-            const navLinks = document.getElementById('navLinks');
-            
-            if (!nav.contains(event.target) && navLinks.classList.contains('active')) {
-                navLinks.classList.remove('active');
-            }
-        });
-    </script>
 </body>
 </html>
