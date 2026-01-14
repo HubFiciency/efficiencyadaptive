@@ -1,542 +1,851 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Efficiency Adaptive — Book</title>
-
-  <!-- Google Font: Montserrat -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Efficiency Adaptive</title>
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-
   <style>
     :root {
       --bg: #ffffff;
-      --text: #0a0a0a;
-      --muted: #6b6b6b;
-      --card: rgba(245, 245, 247, 0.9);
-      --border: rgba(60, 60, 67, 0.15);
-      --hairline: rgba(60, 60, 67, 0.08);
-      --shadow: 0 18px 60px rgba(0,0,0,0.08);
-      --shadow-soft: 0 10px 30px rgba(0,0,0,0.06);
-      --radius: 18px;
-      --radius-sm: 12px;
-      --gradient: linear-gradient(135deg, #4f7cff, #7a5cff);
-      --bg-wash: radial-gradient(1200px 800px at 20% -10%, rgba(79,124,255,0.12), transparent 55%),
-                 radial-gradient(1200px 800px at 80% 0%, rgba(122,92,255,0.10), transparent 55%),
-                 radial-gradient(900px 600px at 50% 110%, rgba(0,0,0,0.03), transparent 60%);
+      --text: #1d1d1f;
+      --text-secondary: #86868b;
+      --border: #d2d2d7;
+      --accent: #0071e3;
+      --header-bg: rgba(255, 255, 255, 0.72);
+      --card-bg: #f5f5f7;
     }
 
     [data-theme="dark"] {
-      --bg: #0b0b0f;
+      --bg: #000000;
       --text: #f5f5f7;
-      --muted: #a1a1a6;
-      --card: rgba(28, 28, 30, 0.78);
-      --border: rgba(235, 235, 245, 0.16);
-      --hairline: rgba(235, 235, 245, 0.10);
-      --shadow: 0 22px 70px rgba(0,0,0,0.55);
-      --shadow-soft: 0 12px 40px rgba(0,0,0,0.45);
-      --radius: 18px;
-      --radius-sm: 12px;
-      --gradient: linear-gradient(135deg, #6aa0ff, #9a7bff);
-      --bg-wash: radial-gradient(1200px 800px at 20% -10%, rgba(106,160,255,0.18), transparent 55%),
-                 radial-gradient(1200px 800px at 80% 0%, rgba(154,123,255,0.14), transparent 55%),
-                 radial-gradient(900px 600px at 50% 110%, rgba(255,255,255,0.04), transparent 60%);
+      --text-secondary: #a1a1a6;
+      --border: #424245;
+      --accent: #2997ff;
+      --header-bg: rgba(0, 0, 0, 0.72);
+      --card-bg: #1d1d1f;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.55;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-      letter-spacing: -0.01em;
+      line-height: 1.6;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background: var(--bg-wash);
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .container {
-      max-width: 1040px;
-      margin: 0 auto;
-      padding: 28px 24px 90px;
-    }
-
+    /* Header */
     header {
-      position: sticky;
+      position: fixed;
       top: 0;
-      z-index: 20;
+      left: 0;
+      right: 0;
+      height: 60px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 14px 0;
-      margin-bottom: 48px;
-      backdrop-filter: saturate(180%) blur(18px);
-      -webkit-backdrop-filter: saturate(180%) blur(18px);
-      border-bottom: 1px solid var(--hairline);
+      padding: 0 5vw;
+      background: var(--header-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 1000;
+      border-bottom: 1px solid transparent;
+      transition: all 0.3s ease;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    header.scrolled {
+      border-bottom-color: var(--border);
+    }
+
+    .logo {
+      font-size: 17px;
       font-weight: 500;
-      font-size: 14px;
-      letter-spacing: 0.2px;
-      color: var(--muted);
-      user-select: none;
-    }
-
-    .brand strong {
-      color: var(--text);
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      text-decoration: none;
-    }
-
-    .brand a { text-decoration: none; color: inherit; }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: var(--gradient);
-      box-shadow: 0 8px 20px rgba(79,124,255,0.22);
-    }
-
-    .controls {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .segmented {
-      display: inline-flex;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 3px;
-      background: rgba(255,255,255,0.02);
-    }
-
-    .segmented button {
-      border: 0;
-      background: transparent;
-      color: var(--muted);
-      padding: 7px 12px;
-      border-radius: 999px;
-      font-family: inherit;
-      font-size: 12px;
+      letter-spacing: 0.02em;
       cursor: pointer;
-      transition: background 160ms ease, color 160ms ease;
+      transition: opacity 0.2s ease;
     }
 
-    .segmented button[aria-pressed="true"] {
-      background: var(--card);
-      color: var(--text);
-      box-shadow: var(--shadow-soft);
+    .logo:hover {
+      opacity: 0.7;
     }
 
-    .toggle {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 7px 10px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      background: rgba(255,255,255,0.02);
-      user-select: none;
-    }
-
-    .toggle span {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .switch {
+    .theme-toggle {
       width: 40px;
-      height: 22px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      position: relative;
-      background: rgba(120,120,128,0.12);
+      height: 40px;
+      border: none;
+      background: none;
       cursor: pointer;
-      transition: background 180ms ease;
-    }
-
-    .switch::after {
-      content: "";
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 18px;
-      height: 18px;
-      border-radius: 999px;
-      background: #fff;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.18);
-      transform: translateX(0);
-      transition: transform 180ms ease;
-    }
-
-    [data-theme="dark"] .switch::after { background: #f5f5f7; }
-
-    .switch[aria-checked="true"] {
-      background: linear-gradient(135deg, rgba(79,124,255,0.55), rgba(122,92,255,0.55));
-    }
-
-    .switch[aria-checked="true"]::after { transform: translateX(18px); }
-
-    /* Page */
-    .page-title {
-      max-width: 860px;
-      margin: 44px 0 18px;
-    }
-
-    .page-title h1 {
-      font-size: clamp(34px, 4.6vw, 54px);
-      font-weight: 600;
-      line-height: 1.08;
-      letter-spacing: -0.04em;
-      color: var(--text);
-      margin-bottom: 12px;
-    }
-
-    .page-title p {
-      color: var(--muted);
-      font-size: 16px;
-      max-width: 680px;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 360px 1fr;
-      gap: 22px;
-      align-items: start;
-      margin-top: 26px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: var(--shadow-soft);
-    }
-
-    .cover {
-      position: sticky;
-      top: 92px;
-      padding: 18px;
-    }
-
-    .cover img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 14px;
-      border: 1px solid var(--hairline);
-      box-shadow: var(--shadow);
-      background: rgba(255,255,255,0.6);
-    }
-
-    .meta h2 {
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      margin-bottom: 10px;
-      color: var(--text);
-    }
-
-    .meta p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.7;
-      margin-bottom: 12px;
-    }
-
-    .chips {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 10px 0 16px;
-    }
-
-    .chip {
-      font-size: 12px;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.02);
-      padding: 7px 10px;
-      border-radius: 999px;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .btn {
-      display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.02);
-      font-family: inherit;
-      font-size: 12px;
-      cursor: pointer;
-      color: var(--text);
-      text-decoration: none;
-      transition: transform 160ms ease, background 160ms ease;
+      border-radius: 50%;
+      transition: background 0.2s ease;
     }
 
-    .btn:hover { background: var(--card); transform: translateY(-1px); }
-
-    .btn.primary {
-      border: 0;
-      background: var(--gradient);
-      color: #fff;
-      box-shadow: var(--shadow-soft);
+    .theme-toggle:hover {
+      background: var(--card-bg);
     }
 
-    .btn.primary:hover { transform: translateY(-1px); }
-
-    .divider {
-      height: 1px;
-      background: var(--hairline);
-      border: 0;
-      margin: 18px 0;
+    .theme-icon {
+      width: 20px;
+      height: 20px;
+      stroke: var(--text);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
-    footer {
-      border-top: 1px solid var(--hairline);
-      padding: 38px 24px 80px;
+    /* Sections */
+    section {
+      min-height: 60vh;
+      padding: 120px 5vw 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 70px;
+      padding-top: 60px;
     }
 
-    footer nav { margin-bottom: 14px; }
+    .hero h1 {
+      font-size: clamp(40px, 7vw, 80px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeInUp 0.8s ease forwards;
+    }
 
-    footer a {
-      color: var(--muted);
+    .hero .subhead {
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 300;
+      color: var(--text-secondary);
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeInUp 0.8s ease 0.2s forwards;
+    }
+
+    .cta-primary {
+      display: inline-block;
+      padding: 14px 32px;
+      background: var(--accent);
+      color: white;
       text-decoration: none;
-      margin: 0 10px;
-      padding-bottom: 2px;
-      border-bottom: 1px solid transparent;
+      border-radius: 980px;
+      font-size: 17px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      opacity: 0;
+      animation: fadeInUp 0.8s ease 0.4s forwards;
     }
 
-    footer a:hover {
+    .cta-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 113, 227, 0.3);
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      animation: fadeInUp 0.8s ease 0.6s forwards, bounce 2s ease-in-out 1.4s infinite;
+    }
+
+    .scroll-arrow {
+      width: 24px;
+      height: 24px;
+      stroke: var(--text-secondary);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      from {
+        transform: translateY(20px);
+      }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-10px); }
+    }
+
+    /* Section Titles */
+    .section-title {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .section-intro {
+      font-size: clamp(17px, 2.5vw, 21px);
+      font-weight: 400;
+      color: var(--text-secondary);
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 80px;
+      line-height: 1.6;
+    }
+
+    .you-are-here {
+      display: inline-block;
+      margin-top: 16px;
+      font-weight: 500;
       color: var(--text);
-      border-bottom-color: var(--hairline);
+    }
+    .season-status {
+      display: inline-block;
+      margin-top: 10px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+    }
+    .domain-status {
+      font-style: italic;
+      font-weight: 300;
+      font-size: 16px;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+      margin-left: 10px;
     }
 
-    @media (max-width: 980px) {
-      .layout { grid-template-columns: 320px 1fr; }
+    /* Accessibility: visible focus */
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+      border-radius: 10px;
     }
 
-    @media (max-width: 860px) {
-      .layout { grid-template-columns: 1fr; }
-      .cover { position: relative; top: auto; }
-      header { margin-bottom: 38px; }
-      .page-title { margin: 34px 0 14px; }
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
     }
 
-    @media (max-width: 420px) {
-      .controls { gap: 10px; }
-      .toggle span { display: none; }
+    /* Theme Cards */
+    .theme-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 80px;
+    }
+
+    @media (min-width: 768px) {
+      .theme-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .theme-card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 40px 32px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .theme-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .theme-card h3 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      letter-spacing: 0.02em;
+    }
+
+    .theme-card p {
+      font-size: 17px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* Recognition Blocks */
+    .recognition-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 768px) {
+      .recognition-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .recognition-block {
+      padding: 32px;
+      border-left: 2px solid var(--border);
+      transition: border-color 0.3s ease;
+    }
+
+    .recognition-block:hover {
+      border-left-color: var(--accent);
+    }
+
+    .recognition-block p {
+      font-size: 17px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.75;
+    }
+
+    /* Season Blocks */
+    .season-block {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 48px 40px;
+      margin-bottom: 24px;
+      transition: transform 0.3s ease;
+    }
+
+    .season-block:hover {
+      transform: translateY(-2px);
+    }
+
+    .season-block h3 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      letter-spacing: 0.02em;
+    }
+
+    .season-goal {
+      font-size: 19px;
+      font-weight: 400;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .adaptive-entry {
+      margin-bottom: 32px;
+    }
+
+    .adaptive-entry h4 {
+      font-size: 15px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .adaptive-entry ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .adaptive-entry li {
+      font-size: 17px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .adaptive-entry li:before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+
+    .cta-secondary {
+      display: inline-block;
+      padding: 12px 28px;
+      border: 1.5px solid var(--text);
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 980px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .cta-secondary:hover {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    /* Principles */
+    .principles-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 768px) {
+      .principles-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .principle {
+      text-align: center;
+      font-size: 21px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    /* Authority Section */
+    .authority-content {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 21px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+
+    /* Closing */
+    .closing {
+      text-align: center;
+      padding: 120px 5vw;
+    }
+
+    .closing h2 {
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 48px;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--card-bg);
+      padding: 60px 5vw;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
+    .social-links {
+      display: flex;
+      gap: 16px;
+    }
+
+    .social-icon {
+      width: 24px;
+      height: 24px;
+      stroke: var(--text-secondary);
+      fill: none;
+      stroke-width: 2;
+      transition: stroke 0.2s ease;
+    }
+
+    .social-links a:hover .social-icon {
+      stroke: var(--text);
+    }
+
+    .footer-legal {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .footer-note {
+      margin-top: 14px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Legal / Privacy inline panel */
+    .legal-panel {
+      max-width: 1200px;
+      margin: 0 auto 32px;
+      padding: 28px 24px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .legal-panel h3 {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 12px;
+    }
+
+    .legal-panel p {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+
+    .legal-panel a {
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .legal-panel a:hover {
+      color: var(--accent);
+    }
+
+    /* Seasons inline panel */
+    .seasons-panel .current {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .seasons-panel .muted {
+      color: var(--text-secondary);
+    }
+
+    .seasons-list {
+      margin-top: 10px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .seasons-item {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .seasons-item .dot {
+      display: inline-block;
+      width: 10px;
+      text-align: center;
+      margin-right: 6px;
+      color: var(--accent);
+    }
+
+    @media (min-width: 768px) {
+      .footer-content {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
+<body>
+  <header id="header">
+    <div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Efficiency Adaptive</div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <svg class="theme-icon" id="themeIcon" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+    </button>
+  </header>
 
-<body data-theme="light">
-  <div class="container">
-    <header>
-      <div class="brand">
-        <a href="./index.html" aria-label="Back to home"><strong>Efficiency Adaptive</strong></a>
+  <section style="padding: 110px 5vw 60px; max-width: 1200px; margin: 0 auto;">
+    <h2 class="section-title">Book #1</h2>
+    <p class="section-intro">
+      The first published foundation of Efficiency Adaptive — a practical, minimal guide to modern efficiency and AI.
+    </p>
+
+    <div class="season-block" style="display: grid; grid-template-columns: 1fr; gap: 22px; align-items: start;">
+      <div style="display:flex; justify-content:center;">
+        <img
+          src="book-cover.png"
+          alt="Book cover of Modern Efficiency & Artificial Intelligence"
+          style="width:100%; max-width:320px; aspect-ratio:2/3; border-radius:16px; object-fit:cover;"
+        />
       </div>
 
-      <div class="controls">
-        <div class="segmented" role="group" aria-label="Language">
-          <button id="langEn" type="button" aria-pressed="true" onclick="setLang('en')">EN</button>
-          <button id="langFr" type="button" aria-pressed="false" onclick="setLang('fr')">FR</button>
+      <div>
+        <h3 style="margin-bottom: 8px;">Modern Efficiency &amp; Artificial Intelligence</h3>
+        <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 18px;">
+          This book explores a simple idea: the best systems are the ones you can actually keep.
+          It connects modern efficiency with practical AI thinking — without hype, without overload.
+        </p>
+
+        <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top: 6px;">
+          <a class="cta-secondary" href="https://www.amazon.ca/dp/2982406837" target="_blank" rel="noopener noreferrer">
+            Buy on Amazon
+          </a>
+          <a class="cta-secondary" href="index.html">
+            Back to Home
+          </a>
         </div>
 
-        <div class="toggle" aria-label="Theme">
-          <span id="themeLabel">Light</span>
-          <div id="themeSwitch" class="switch" role="switch" tabindex="0" aria-checked="false" onclick="toggleTheme()"></div>
-        </div>
+        <p style="margin-top: 14px; font-size: 12px; color: var(--text-secondary);">
+          Available on Amazon (print + Kindle, depending on region).
+        </p>
       </div>
-    </header>
-
-    <div class="page-title">
-      <h1 id="pageTitle">Book</h1>
-      <p id="pageDesc">A practical, minimal guide to modern efficiency and AI — designed to reduce noise and increase clarity.</p>
     </div>
-
-    <div class="layout">
-      <aside class="card cover" aria-label="Book cover">
-        <img id="bookCover" src="./book-cover.png" alt="Modern Efficiency & Artificial Intelligence — book cover" loading="eager" />
-      </aside>
-
-      <main class="card meta" aria-label="Book details">
-        <h2 id="bookTitle">Modern Efficiency & Artificial Intelligence</h2>
-        <p id="bookSubtitle">Less effort. More results.</p>
-
-        <div class="chips" aria-label="Highlights">
-          <div class="chip" id="chip1">Modern work</div>
-          <div class="chip" id="chip2">Clarity</div>
-          <div class="chip" id="chip3">AI mindset</div>
-          <div class="chip" id="chip4">Sustainable performance</div>
-        </div>
-
-        <p id="bookBody">
-          This book explores a simple idea: the best systems are the ones you can actually keep. It connects modern efficiency with practical AI thinking — without hype, without overload.
-        </p>
-
-        <hr class="divider" />
-
-        <p id="bookNote">
-          Available in English and French. Use the language switch to preview the corresponding cover.
-        </p>
-
-        <div class="actions">
-          <a class="btn primary" id="buyBtn" href="https://www.amazon.ca/dp/2982406837" target="_blank" rel="noopener">Buy / Read</a>
-          <a class="btn" id="homeBtn" href="./index.html">Back to Home</a>
-        </div>
-      </main>
-    </div>
-  </div>
+  </section>
 
   <footer>
-    <nav>
-      <a href="./index.html">Home</a>
-      <a href="mailto:contact@efficiency-adaptive.com">Contact</a>
-    </nav>
-    <div>Efficiency Adaptive™, ADAPT System™, ADAPT Core™, ADAPT Circle™ are trademarks used by Philippe Notot.</div>
-    <div style="margin-top:.5em">© 2025 Philippe Notot. All rights reserved.</div>
+    <div id="legalPanel" class="legal-panel" hidden role="region" aria-label="Legal and privacy information">
+      <h3>Legal &amp; Privacy</h3>
+      <p>This website is operated under the Efficiency Adaptive project.</p>
+      <p>Content is provided for informational purposes only. Nothing here is professional, medical, or legal advice.</p>
+      <p>This site does not request personal data through forms. If analytics are used, they are intended to be minimal and privacy-respecting.</p>
+      <p>External links (LinkedIn, Substack, X, Instagram) are governed by their own policies.</p>
+    </div>
+    <div id="seasonsPanel" class="legal-panel seasons-panel" hidden role="region" aria-label="Seasons map">
+      <h3>Seasons map</h3>
+      <p class="seasons-item"><span class="current"><span class="dot">●</span>Season 1 — Active</span><br><span class="muted">Focus: clarity, stability, usable progress.</span></p>
+      <div class="seasons-list">
+        <div class="seasons-item"><span class="dot">○</span><span class="muted">Season 2 — Planned</span><br><span class="muted">Focus: consolidation &amp; depth.</span></div>
+        <div class="seasons-item"><span class="dot">○</span><span class="muted">Season 3 — Planned</span><br><span class="muted">Focus: leverage &amp; refinement.</span></div>
+      </div>
+      <p class="seasons-item" style="margin-top: 14px;">Applies across: <span class="muted">AI</span> · <span class="muted">Energy First</span> · <span class="muted">ADAPT System</span></p>
+    </div>
+    <div class="footer-content">
+      <div>
+        <div class="footer-brand">
+          <span>Efficiency Adaptive</span>
+        </div>
+        <div class="footer-legal" style="margin-top: 16px;">
+          © 2026 Efficiency Adaptive<br>
+          Efficiency Adaptive™, ADAPT System™<br>
+          All rights reserved.
+        </div>
+        <div class="footer-note">Next season is already taking shape.</div>
+      </div>
+      <div class="footer-links">
+        <a href="https://www.linkedin.com/company/efficiencyadaptive/" target="_blank" rel="noopener noreferrer">About</a>
+        <a href="#seasons" id="seasonsToggle" aria-controls="seasonsPanel" aria-expanded="false">Seasons</a>
+        <a href="https://www.linkedin.com/in/philagile/" target="_blank" rel="noopener noreferrer">Contact</a>
+        <a href="#legal" id="legalToggle" aria-controls="legalPanel" aria-expanded="false">Legal / Privacy</a>
+      </div>
+      <div class="social-links">
+        <a href="https://www.linkedin.com/company/efficiencyadaptive/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <svg class="social-icon" viewBox="0 0 24 24">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+            <rect x="2" y="9" width="4" height="12"/>
+            <circle cx="4" cy="4" r="2"/>
+          </svg>
+        </a>
+        <a href="https://x.com/efficiencyadapt" target="_blank" rel="noopener noreferrer" aria-label="X">
+          <svg class="social-icon" viewBox="0 0 24 24">
+            <path d="M4 4l11.733 16h4.267l-11.733-16z"/>
+            <path d="M4 20l6.768-6.768m2.46-2.46L20 4"/>
+          </svg>
+        </a>
+      </div>
+    </div>
   </footer>
 
   <script>
-    const copy = {
-      en: {
-        pageTitle: "Book",
-        pageDesc: "A practical, minimal guide to modern efficiency and AI — designed to reduce noise and increase clarity.",
-        bookTitle: "Modern Efficiency & Artificial Intelligence",
-        bookSubtitle: "Less effort. More results.",
-        chip1: "Modern work",
-        chip2: "Clarity",
-        chip3: "AI mindset",
-        chip4: "Sustainable performance",
-        bookBody: "This book explores a simple idea: the best systems are the ones you can actually keep. It connects modern efficiency with practical AI thinking — without hype, without overload.",
-        bookNote: "Available in English and French. Use the language switch to preview the corresponding cover.",
-        buyBtn: "Buy / Read",
-        buyRef: "https://www.amazon.ca/dp/2982406837",
-        homeBtn: "Back to Home",
-        themeLight: "Light",
-        themeDark: "Dark",
-        coverSrc: "./book-cover.png",
-        coverAlt: "Modern Efficiency & Artificial Intelligence — book cover"
-      },
-      fr: {
-        pageTitle: "Livre",
-        pageDesc: "Un guide pratique et minimal pour l’efficacité moderne et l’IA — conçu pour réduire le bruit et augmenter la clarté.",
-        bookTitle: "Efficacité Moderne et Intelligence Artificielle",
-        bookSubtitle: "Moins d’effort, plus de résultats.",
-        chip1: "Travail moderne",
-        chip2: "Clarté",
-        chip3: "Esprit IA",
-        chip4: "Performance durable",
-        bookBody: "Ce livre explore une idée simple : les meilleurs systèmes sont ceux qu’on peut réellement maintenir. Il relie l’efficacité moderne à une pensée IA pratique — sans hype, sans surcharge.",
-        bookNote: "Disponible en anglais et en français. Utilise le switch de langue pour voir la couverture correspondante.",
-        buyBtn: "Acheter / Lire",
-        buyRef: "https://www.amazon.ca/dp/2982406810",
-        homeBtn: "Retour accueil",
-        themeLight: "Clair",
-        themeDark: "Sombre",
-        coverSrc: "./livre-couverture.png",
-        coverAlt: "Efficacité Moderne et Intelligence Artificielle — couverture du livre"
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const html = document.documentElement;
+
+    // Check for saved theme preference or default to system preference
+    const getPreferredTheme = () => {
+      const saved = localStorage.getItem('theme');
+      if (saved) return saved;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+
+    const setTheme = (theme) => {
+      html.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      updateIcon(theme);
+    };
+
+    const updateIcon = (theme) => {
+      // Show the *target* theme icon (what will happen if the user clicks)
+      // If current theme is dark, show Sun (switch to light). If current theme is light, show Moon (switch to dark).
+      const target = theme === 'dark' ? 'light' : 'dark';
+
+      if (target === 'dark') {
+        // Moon icon (switch to dark)
+        themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+        themeToggle.setAttribute('aria-label', 'Switch to dark mode');
+        themeToggle.setAttribute('title', 'Switch to dark mode');
+      } else {
+        // Sun icon (switch to light)
+        themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+        themeToggle.setAttribute('aria-label', 'Switch to light mode');
+        themeToggle.setAttribute('title', 'Switch to light mode');
       }
     };
 
-    let lang = "en";
+    // Initialize theme
+    setTheme(getPreferredTheme());
 
-    function applyLang(next) {
-      const c = copy[next];
-      document.getElementById("pageTitle").textContent = c.pageTitle;
-      document.getElementById("pageDesc").textContent = c.pageDesc;
-      document.getElementById("bookTitle").textContent = c.bookTitle;
-      document.getElementById("bookSubtitle").textContent = c.bookSubtitle;
-
-      document.getElementById("chip1").textContent = c.chip1;
-      document.getElementById("chip2").textContent = c.chip2;
-      document.getElementById("chip3").textContent = c.chip3;
-      document.getElementById("chip4").textContent = c.chip4;
-
-      document.getElementById("bookBody").textContent = c.bookBody;
-      document.getElementById("bookNote").textContent = c.bookNote;
-      document.getElementById("buyBtn").textContent = c.buyBtn;
-      document.getElementById("homeBtn").textContent = c.homeBtn;
-
-      const img = document.getElementById("bookCover");
-      img.src = c.coverSrc;
-      img.alt = c.coverAlt;
-
-      document.getElementById("langEn").setAttribute("aria-pressed", String(next === "en"));
-      document.getElementById("langFr").setAttribute("aria-pressed", String(next === "fr"));
-
-      const isDark = document.body.dataset.theme === "dark";
-      document.getElementById("themeLabel").textContent = isDark ? c.themeDark : c.themeLight;
-
-      lang = next;
-    }
-
-    function setLang(next) { applyLang(next); }
-
-    function toggleTheme() {
-      const body = document.body;
-      const nextTheme = body.dataset.theme === "light" ? "dark" : "light";
-      body.dataset.theme = nextTheme;
-
-      const checked = nextTheme === "dark";
-      const sw = document.getElementById("themeSwitch");
-      sw.setAttribute("aria-checked", String(checked));
-
-      const c = copy[lang];
-      document.getElementById("themeLabel").textContent = checked ? c.themeDark : c.themeLight;
-    }
-
-    // Keyboard toggle on the theme switch
-    document.addEventListener("keydown", (e) => {
-      if (e.key !== "Enter" && e.key !== " ") return;
-      const active = document.activeElement;
-      if (active && active.id === "themeSwitch") {
-        e.preventDefault();
-        toggleTheme();
-      }
+    themeToggle.addEventListener('click', () => {
+      const current = html.getAttribute('data-theme');
+      setTheme(current === 'dark' ? 'light' : 'dark');
     });
 
-    (function init() {
-      document.body.dataset.theme = "light";
-      document.getElementById("themeSwitch").setAttribute("aria-checked", "false");
-      applyLang("en");
-    })();
+    // Legal / Privacy panel toggle
+    const legalToggle = document.getElementById('legalToggle');
+    const legalPanel = document.getElementById('legalPanel');
+
+    if (legalToggle && legalPanel) {
+      legalToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isOpen = !legalPanel.hasAttribute('hidden');
+
+        if (isOpen) {
+          legalPanel.setAttribute('hidden', '');
+          legalToggle.setAttribute('aria-expanded', 'false');
+        } else {
+          legalPanel.removeAttribute('hidden');
+          legalToggle.setAttribute('aria-expanded', 'true');
+          // Keep the experience calm: reveal then gently bring into view
+          legalPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }
+
+    // Seasons panel toggle
+    const seasonsToggle = document.getElementById('seasonsToggle');
+    const seasonsPanel = document.getElementById('seasonsPanel');
+
+    const closePanel = (toggleEl, panelEl) => {
+      if (!toggleEl || !panelEl) return;
+      panelEl.setAttribute('hidden', '');
+      toggleEl.setAttribute('aria-expanded', 'false');
+    };
+
+    const openPanel = (toggleEl, panelEl) => {
+      if (!toggleEl || !panelEl) return;
+      panelEl.removeAttribute('hidden');
+      toggleEl.setAttribute('aria-expanded', 'true');
+      panelEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    if (seasonsToggle && seasonsPanel) {
+      seasonsToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const isOpen = !seasonsPanel.hasAttribute('hidden');
+
+        // If opening Seasons, close Legal to keep the footer calm
+        if (!isOpen) closePanel(legalToggle, legalPanel);
+
+        if (isOpen) {
+          closePanel(seasonsToggle, seasonsPanel);
+        } else {
+          openPanel(seasonsToggle, seasonsPanel);
+        }
+      });
+    }
+
+    // If opening Legal, close Seasons
+    if (legalToggle && legalPanel) {
+      legalToggle.addEventListener('click', () => {
+        // After Legal toggles itself, ensure Seasons is closed when Legal is opened
+        const legalIsOpen = !legalPanel.hasAttribute('hidden');
+        if (legalIsOpen) closePanel(seasonsToggle, seasonsPanel);
+      }, { passive: true });
+    }
+
+    // Header scroll effect
+    const header = document.getElementById('header');
+    let lastScroll = 0;
+
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      
+      if (currentScroll > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+      
+      lastScroll = currentScroll;
+    });
+  </script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-74YL0LPJZ5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-74YL0LPJZ5');
   </script>
 </body>
 </html>
